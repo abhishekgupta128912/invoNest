@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import connectDB from './config/database';
+import authRoutes from './routes/authRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -24,12 +25,15 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    message: 'InvoNest API is running!', 
+  res.json({
+    message: 'InvoNest API is running!',
     timestamp: new Date().toISOString(),
     version: '1.0.0'
   });
 });
+
+// Authentication routes
+app.use('/api/auth', authRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
