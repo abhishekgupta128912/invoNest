@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/database';
 import authRoutes from './routes/authRoutes';
 import invoiceRoutes from './routes/invoiceRoutes';
+import chatRoutes from './routes/chatRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -38,6 +39,9 @@ app.use('/api/auth', authRoutes);
 
 // Invoice routes
 app.use('/api/invoices', invoiceRoutes);
+
+// Chat routes
+app.use('/api/chat', chatRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
