@@ -139,17 +139,19 @@ PRIVATE_KEY=your-wallet-private-key
 - [ ] Create chat interface
 - [ ] Implement context-aware responses
 
-### 🔄 Day 5: Compliance Calendar & Notifications
-- [ ] Build compliance calendar
-- [ ] Setup email notifications
-- [ ] Create alert system
-- [ ] Implement notification preferences
+### ✅ Day 5: Compliance Calendar & Notifications
+- [x] Build compliance calendar
+- [x] Setup email notifications
+- [x] Create alert system
+- [x] Implement notification preferences
 
-### 🔄 Day 6: File Upload & Blockchain PoC
-- [ ] Add file upload functionality
-- [ ] Implement document parsing
-- [ ] Create blockchain integration
-- [ ] Setup document management
+### ✅ Day 6: File Upload & Blockchain PoC
+- [x] Add file upload functionality
+- [x] Implement document parsing with AI
+- [x] Create blockchain integration (Polygon PoC)
+- [x] Setup document management system
+- [x] Build drag-and-drop file upload UI
+- [x] Implement document security and hash verification
 
 ### 🔄 Day 7: Integration & Deployment
 - [ ] Connect all modules
