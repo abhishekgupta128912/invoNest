@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { seedComplianceDeadlines } from '../services/complianceSeeder';
 
 const connectDB = async (): Promise<void> => {
   try {
@@ -8,6 +9,9 @@ const connectDB = async (): Promise<void> => {
     
     console.log('✅ MongoDB connected successfully');
     console.log(`📍 Database: ${mongoose.connection.name}`);
+
+    // Seed compliance deadlines
+    await seedComplianceDeadlines();
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
     process.exit(1);

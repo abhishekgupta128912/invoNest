@@ -6,6 +6,10 @@ import connectDB from './config/database';
 import authRoutes from './routes/authRoutes';
 import invoiceRoutes from './routes/invoiceRoutes';
 import chatRoutes from './routes/chatRoutes';
+import complianceRoutes from './routes/complianceRoutes';
+import notificationRoutes from './routes/notificationRoutes';
+import documentRoutes from './routes/documentRoutes';
+import schedulerService from './services/schedulerService';
 
 // Load environment variables
 dotenv.config();
@@ -43,6 +47,15 @@ app.use('/api/invoices', invoiceRoutes);
 // Chat routes
 app.use('/api/chat', chatRoutes);
 
+// Compliance routes
+app.use('/api/compliance', complianceRoutes);
+
+// Notification routes
+app.use('/api/notifications', notificationRoutes);
+
+// Document routes
+app.use('/api/documents', documentRoutes);
+
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);
@@ -60,6 +73,9 @@ app.use('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 InvoNest server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+
+  // Start the scheduler service
+  schedulerService.start();
 });
 
 export default app;

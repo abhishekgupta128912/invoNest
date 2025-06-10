@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import User, { IUser } from '../models/User';
 import { generateToken, generateRefreshToken } from '../utils/jwt';
+import { ComplianceDeadline, UserCompliance } from '../models/Compliance';
+import { NotificationPreference } from '../models/Notification';
 
 // Register new user
 export const register = async (req: Request, res: Response): Promise<void> => {
@@ -49,6 +52,10 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
 
     await user.save();
+
+    // Initialize user compliance and notification preferences
+    await initializeUserCompliance((user._id as any).toString());
+    await initializeNotificationPreferences((user._id as any).toString());
 
     // Generate tokens
     const token = generateToken(user);
@@ -331,3 +338,52 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     message: 'Logout successful. Please remove token from client storage.'
   });
 };
+
+// Helper function to initialize user compliance items
+async function initializeUserCompliance(userId: string) {
+  try {
+    // Get all active compliance deadlines
+    const complianceDeadlines = await ComplianceDeadline.find({ isActive: true });
+
+    // Create user compliance entries for each deadline
+    const userComplianceItems = complianceDeadlines.map(deadline => ({
+      userId,
+      complianceId: deadline._id,
+      isEnabled: true,
+      reminderDays: [7, 3, 1], // Default reminder days
+      nextDueDate: deadline.nextDueDate || deadline.dueDate,
+      isCompleted: false
+    }));
+
+    await UserCompliance.insertMany(userComplianceItems);
+    console.log(`Initialized ${userComplianceItems.length} compliance items for user ${userId}`);
+  } catch (error) {
+    console.error('Error initializing user compliance:', error);
+  }
+}
+
+// Helper function to initialize notification preferences
+async function initializeNotificationPreferences(userId: string) {
+  try {
+    const preferences = new NotificationPreference({
+      userId,
+      emailNotifications: true,
+      complianceReminders: true,
+      invoiceReminders: true,
+      systemUpdates: true,
+      marketingEmails: false,
+      reminderTiming: {
+        days: [7, 3, 1],
+        timeOfDay: '09:00',
+        timezone: 'Asia/Kolkata'
+      },
+      maxDailyEmails: 5,
+      digestMode: false
+    });
+
+    await preferences.save();
+    console.log(`Initialized notification preferences for user ${userId}`);
+  } catch (error) {
+    console.error('Error initializing notification preferences:', error);
+  }
+}
