@@ -1,0 +1,12 @@
+{
+  "input": "Yes, what about the old regime?",
+  "output": "For ₹15 lakh salary in FY 2025-26 (old regime):\n- Deductions (e.g., ₹1.5 lakh under Section 80C, ₹50,000 under 80CCD(1B), ₹75,000 standard deduction) may reduce taxable income. Assuming ₹2.75 lakh deductions:\n- Taxable income: ₹15,00,000 – ₹2,75,000 = ₹12,25,000\nTax slabs:\n- ₹0–₹2.5 lakh: ₹0\n- ₹2.5–₹5 lakh: ₹2,50,000 × 5% = ₹12,500\n- ₹5–₹10 lakh: ₹5,00,000 × 20% = ₹1,00,000\n- ₹10–₹12.25 lakh: ₹2,25,000 × 30% = ₹67,500\nTotal tax: ₹12,500 + ₹1,00,000 + ₹67,500 = ₹1,80,000\nAdd 4% cess: ₹1,80,000 × 4% = ₹7,200\nFinal tax: ₹1,87,200\nNew regime (₹97,500) is better unless you have higher deductions.",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.445537Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

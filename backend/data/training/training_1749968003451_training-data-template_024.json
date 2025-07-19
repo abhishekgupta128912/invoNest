@@ -1,0 +1,12 @@
+{
+  "input": "What’s the GST exemption for rare disease medicines in 2025?",
+  "output": "For FY 2025-26, IGST is exempt on Dinutuximab (Quarziba) and medicines/Food for Special Medical Purposes (FSMP) for rare diseases when imported for personal use or by Centres of Excellence for Rare Diseases (or recommended institutions). File exemption claims via gst.gov.in.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.451728Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

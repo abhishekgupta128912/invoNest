@@ -1,0 +1,12 @@
+{
+  "input": "How to comply with TDS for government contracts?",
+  "output": "For government contracts in FY 2025-26:\n- **Income Tax TDS**: Deduct as per sections (e.g., 194C: 1% for individuals, 2% for firms, > ₹30,000/year).\n- **GST TDS**: Deduct 2% (1% CGST + 1% SGST or 2% IGST) under Section 51 for contracts > ₹2.5 lakh. File GSTR-7 by the 10th of next month, issue GSTR-7A within 5 days.\nExample: ₹10 lakh contract → GST TDS = ₹20,000. Deposit TDS, file returns, and reconcile with Form 26AS. InvoNest tracks TDS compliance.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.457218Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

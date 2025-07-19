@@ -1,7 +1,41 @@
 import { Request, Response } from 'express';
 import { ComplianceDeadline, UserCompliance } from '../models/Compliance';
 import { Notification } from '../models/Notification';
-import emailService from '../services/emailService';
+import getEmailService from '../services/emailService';
+
+// Get user compliance data (for dashboard)
+export const getUserCompliance = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?._id;
+
+    // Get all user's compliance items
+    const userCompliances = await UserCompliance.find({
+      userId,
+      isEnabled: true
+    })
+    .populate({
+      path: 'complianceId',
+      match: { isActive: true },
+      select: 'title description type category priority penaltyInfo resources'
+    })
+    .sort({ nextDueDate: 1 });
+
+    // Filter out items where compliance was not found (due to populate match)
+    const validCompliances = userCompliances.filter(item => item.complianceId);
+
+    res.json({
+      success: true,
+      data: validCompliances
+    });
+
+  } catch (error) {
+    console.error('Get user compliance error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch user compliance data'
+    });
+  }
+};
 
 // Get all compliance deadlines for the current user
 export const getComplianceCalendar = async (req: Request, res: Response) => {
@@ -116,12 +150,24 @@ export const markComplianceCompleted = async (req: Request, res: Response) => {
       userCompliance.notes = notes;
     }
 
-    // Calculate next due date for recurring items
+    // For recurring items, create a new entry for the next occurrence instead of resetting
     const compliance = userCompliance.complianceId as any;
     if (compliance.frequency !== 'one_time') {
       const nextDueDate = calculateNextDueDate(userCompliance.nextDueDate, compliance.frequency);
-      userCompliance.nextDueDate = nextDueDate;
-      userCompliance.isCompleted = false; // Reset for next occurrence
+
+      // Create a new UserCompliance entry for the next occurrence
+      const nextOccurrence = new UserCompliance({
+        userId: userCompliance.userId,
+        complianceId: userCompliance.complianceId,
+        isEnabled: userCompliance.isEnabled,
+        reminderDays: userCompliance.reminderDays,
+        nextDueDate: nextDueDate,
+        isCompleted: false,
+        customDueDate: userCompliance.customDueDate
+      });
+
+      await nextOccurrence.save();
+      console.log(`✅ Created next occurrence for ${compliance.title} due on ${nextDueDate.toDateString()}`);
     }
 
     await userCompliance.save();
@@ -293,6 +339,79 @@ export const getComplianceStats = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: 'Failed to fetch compliance statistics'
+    });
+  }
+};
+
+// Get overdue activity details
+export const getOverdueActivity = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?._id;
+    const currentDate = new Date();
+
+    // Get all overdue compliance items with details
+    const overdueItems = await UserCompliance.find({
+      userId,
+      isEnabled: true,
+      isCompleted: false,
+      nextDueDate: { $lt: currentDate }
+    })
+    .populate({
+      path: 'complianceId',
+      match: { isActive: true },
+      select: 'title description type category priority penaltyInfo resources'
+    })
+    .sort({ nextDueDate: 1 }) // Oldest overdue first
+    .limit(20); // Limit to prevent performance issues
+
+    // Filter out items where compliance was not found and calculate days overdue
+    const validOverdueItems = overdueItems
+      .filter(item => item.complianceId)
+      .map(item => {
+        const daysOverdue = Math.floor((currentDate.getTime() - new Date(item.nextDueDate).getTime()) / (1000 * 60 * 60 * 24));
+        return {
+          _id: item._id,
+          complianceId: item.complianceId,
+          nextDueDate: item.nextDueDate,
+          daysOverdue,
+          notes: item.notes,
+          completedDate: item.completedDate
+        };
+      });
+
+    res.json({
+      success: true,
+      data: validOverdueItems
+    });
+  } catch (error) {
+    console.error('Error fetching overdue activity:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch overdue activity'
+    });
+  }
+};
+
+// Clear all compliance data for a user (useful for removing fake data)
+export const clearUserCompliance = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?._id;
+
+    // Delete all user compliance items
+    const result = await UserCompliance.deleteMany({ userId });
+
+    console.log(`🧹 Cleared ${result.deletedCount} compliance items for user ${userId}`);
+
+    res.json({
+      success: true,
+      message: `Cleared ${result.deletedCount} compliance items`,
+      data: { deletedCount: result.deletedCount }
+    });
+  } catch (error) {
+    console.error('Error clearing user compliance:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to clear compliance data'
     });
   }
 };

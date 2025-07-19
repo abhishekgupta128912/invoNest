@@ -1,0 +1,12 @@
+{
+  "input": "How to handle GST for exports in FY 2025-26?",
+  "output": "For exports in FY 2025-26, GST is zero-rated under Section 16 of the IGST Act. Options:\n1. **Export with LUT**: File Letter of Undertaking (LUT) on gst.gov.in to export without paying GST. Claim ITC on inputs.\n2. **Export with Payment**: Pay IGST on exports and claim a refund post-export.\nSteps:\n- Issue export invoice with ‘Supply Meant for Export’.\n- File shipping bill and GSTR-1.\n- Claim refund via RFD-01 within 2 years.\nInvoNest supports export invoicing. Are you exporting goods or services?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.453052Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

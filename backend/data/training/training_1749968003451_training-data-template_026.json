@@ -1,0 +1,12 @@
+{
+  "input": "What’s the TDS threshold for rent in FY 2025-26?",
+  "output": "For FY 2025-26, under Section 194I, TDS on rent is 10% for payments exceeding ₹2.4 lakh per year (no change in Budget 2025). Example: ₹3,00,000 annual rent → TDS = ₹30,000. For individuals/HUFs, the threshold is ₹2.4 lakh if rent is paid to residents. Deposit by the 7th of next month, file Form 26Q.",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.451728Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

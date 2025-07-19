@@ -495,6 +495,76 @@ export const updateDocument = async (req: Request, res: Response): Promise<void>
   }
 };
 
+// Analyze document with AI
+export const analyzeDocument = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (!req.file) {
+      res.status(400).json({
+        success: false,
+        message: 'No file uploaded'
+      });
+      return;
+    }
+
+    const userId = req.user?._id;
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: 'User not authenticated'
+      });
+      return;
+    }
+
+    try {
+      // For now, provide a mock analysis result
+      // TODO: Integrate with actual document parsing service
+      const analysisResult = {
+        summary: `Analysis of ${req.file.originalname}`,
+        entities: [
+          { type: 'Amount', value: '₹10,000', confidence: 0.95 },
+          { type: 'Date', value: '2024-01-15', confidence: 0.90 },
+          { type: 'GST Number', value: '22AAAAA0000A1Z5', confidence: 0.85 }
+        ],
+        recommendations: [
+          'Verify GST number format',
+          'Check tax calculations',
+          'Ensure compliance with current rates'
+        ]
+      };
+
+      res.status(200).json({
+        success: true,
+        message: 'Document analyzed successfully',
+        data: {
+          fileName: req.file.originalname,
+          fileType: req.file.mimetype,
+          fileSize: req.file.size,
+          analysis: analysisResult,
+          analyzedAt: new Date().toISOString()
+        }
+      });
+
+    } catch (parseError) {
+      console.error('Document analysis failed:', parseError);
+
+      res.status(500).json({
+        success: false,
+        message: 'Failed to analyze document',
+        error: process.env.NODE_ENV === 'development' ? parseError : undefined
+      });
+    }
+
+  } catch (error) {
+    console.error('Document analysis error:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to analyze document',
+      error: process.env.NODE_ENV === 'development' ? error : undefined
+    });
+  }
+};
+
 // Delete document
 export const deleteDocument = async (req: Request, res: Response): Promise<void> => {
   try {

@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import { UserCompliance } from '../models/Compliance';
 import { Notification, NotificationPreference } from '../models/Notification';
 import User from '../models/User';
-import emailService from './emailService';
+import getEmailService from './emailService';
 
 class SchedulerService {
   private isRunning = false;
@@ -118,6 +118,7 @@ class SchedulerService {
       // Send email if enabled
       if (preferences?.emailNotifications) {
         const emailAddress = preferences.emailAddress || user.email;
+        const emailService = getEmailService();
         const success = await emailService.sendComplianceReminder(
           emailAddress,
           compliance.title,
@@ -175,7 +176,8 @@ class SchedulerService {
       // Send email if enabled
       if (notification.channels.email && preferences?.emailNotifications && notification.emailDetails) {
         const emailAddress = preferences.emailAddress || user.email;
-        
+        const emailService = getEmailService();
+
         const success = await emailService.sendEmail(
           emailAddress,
           notification.emailDetails.subject,

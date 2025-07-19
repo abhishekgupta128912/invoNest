@@ -5,11 +5,13 @@ export interface JWTPayload {
   userId: string;
   email: string;
   role: string;
+  exp?: number; // JWT expiration time
+  iat?: number; // JWT issued at time
 }
 
-export const generateToken = (user: IUser): string => {
+export const generateToken = (user: IUser | any): string => {
   const payload: JWTPayload = {
-    userId: (user._id as any).toString(),
+    userId: user._id ? (user._id as any).toString() : user.id,
     email: user.email,
     role: user.role
   };
@@ -36,9 +38,9 @@ export const verifyToken = (token: string): JWTPayload => {
   }
 };
 
-export const generateRefreshToken = (user: IUser): string => {
+export const generateRefreshToken = (user: IUser | any): string => {
   const payload = {
-    userId: (user._id as any).toString(),
+    userId: user._id ? (user._id as any).toString() : user.id,
     type: 'refresh'
   };
 

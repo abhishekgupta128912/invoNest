@@ -1,0 +1,12 @@
+{
+  "input": "What’s the tax implication for crypto income in FY 2025-26?",
+  "output": "For FY 2025-26, crypto income (VDAs) is taxed under Section 115BBH:\n- **30%** flat tax on gains (no deductions except cost of acquisition).\n- **1%** TDS under Section 194S on transfers > ₹50,000 (individuals/HUFs).\nReport in ITR-2/3, Schedule VDA. No specific crypto tax guidance updates in Budget 2025. Consult a CA for compliance.",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.457218Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

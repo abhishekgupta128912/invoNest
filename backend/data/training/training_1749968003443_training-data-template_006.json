@@ -1,0 +1,12 @@
+{
+  "input": "What are the income tax slabs for FY 2025-26 under the new regime?",
+  "output": "For FY 2025-26 (AY 2026-27), the new tax regime slabs are:\n- ₹0–₹4 lakh: 0%\n- ₹4–₹8 lakh: 5%\n- ₹8–₹12 lakh: 10%\n- ₹12–₹16 lakh: 15%\n- ₹16–₹20 lakh: 20%\n- ₹20–₹24 lakh: 25%\n- Above ₹24 lakh: 30%\nRebate under Section 87A is ₹60,000, so no tax up to ₹12 lakh income. Standard deduction for salaried individuals is ₹75,000, making tax-free income up to ₹12.75 lakh.",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.443522Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

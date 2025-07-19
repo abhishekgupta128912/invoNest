@@ -1,0 +1,12 @@
+{
+  "input": "No, they don’t have a lower TDS certificate.",
+  "output": "Then the standard 10% TDS applies. Deposit the ₹5,000 TDS by the 7th of the next month using your TAN via the e-filing portal (incometax.gov.in). File TDS return in Form 26Q by the 31st of the quarter-end month. Ensure the freelancer’s PAN is linked to Aadhaar to avoid 20% TDS under Section 206AA. Need help with TDS filing?",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.443522Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

@@ -1,8 +1,14 @@
 import { Request, Response } from 'express';
+import crypto from 'crypto';
 import Invoice, { IInvoice } from '../models/Invoice';
 import User from '../models/User';
-import { calculateInvoiceGST, convertToInvoiceItems } from '../utils/gstCalculations';
+import { calculateInvoiceGST, calculateInvoiceSimple, convertToInvoiceItems } from '../utils/gstCalculations';
 import { generateInvoicePDF } from '../utils/pdfGenerator';
+import SubscriptionService from '../services/subscriptionService';
+import { getEmailService } from '../services/emailService';
+import EmailQueueService from '../services/emailQueueService';
+import { timeOperation } from '../utils/performanceMonitor';
+import PerformanceMonitor from '../utils/performanceMonitor';
 
 // Create new invoice
 export const createInvoice = async (req: Request, res: Response): Promise<void> => {
@@ -21,7 +27,8 @@ export const createInvoice = async (req: Request, res: Response): Promise<void> 
       items,
       dueDate,
       notes,
-      terms
+      terms,
+      invoiceType = 'gst' // Default to GST invoice
     } = req.body;
 
     // Get user details for seller information
@@ -34,21 +41,36 @@ export const createInvoice = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    // Validate seller has required address information
-    if (!seller.address?.state) {
+    // Validate seller has required address information for GST invoices
+    if (invoiceType === 'gst' && !seller.address?.state) {
       res.status(400).json({
         success: false,
-        message: 'Seller address information is incomplete. Please update your profile.'
+        message: 'Seller address information is incomplete. Please update your profile for GST invoices.'
       });
       return;
     }
 
-    // Calculate GST for all items
-    const calculation = calculateInvoiceGST(
-      items,
-      seller.address.state,
-      customer.address.state
-    );
+    // Calculate totals based on invoice type
+    let calculation;
+    if (invoiceType === 'gst') {
+      // Validate GST-specific requirements
+      if (!customer.address?.state) {
+        res.status(400).json({
+          success: false,
+          message: 'Customer state is required for GST invoices.'
+        });
+        return;
+      }
+
+      calculation = calculateInvoiceGST(
+        items,
+        seller.address!.state,
+        customer.address.state
+      );
+    } else {
+      // Simple calculation for non-GST invoices
+      calculation = calculateInvoiceSimple(items);
+    }
 
     // Generate invoice number
     const invoiceNumber = await (Invoice as any).generateInvoiceNumber(userId);
@@ -57,11 +79,20 @@ export const createInvoice = async (req: Request, res: Response): Promise<void> 
     const invoiceItems = convertToInvoiceItems(calculation.items);
 
     // Create invoice
+    console.log('Creating invoice with data:', {
+      invoiceNumber,
+      userId,
+      customerName: customer.name,
+      itemsCount: invoiceItems.length,
+      grandTotal: calculation.grandTotal
+    });
+
     const invoice = new Invoice({
       invoiceNumber,
       invoiceDate: new Date(),
       dueDate: dueDate ? new Date(dueDate) : undefined,
       userId,
+      invoiceType,
       customer,
       items: invoiceItems,
       subtotal: calculation.subtotal,
@@ -76,7 +107,18 @@ export const createInvoice = async (req: Request, res: Response): Promise<void> 
       terms
     });
 
+    console.log('Invoice object created, saving...');
     await invoice.save();
+    console.log('Invoice saved successfully with hash:', invoice.hash);
+
+    // Increment usage after successful invoice creation
+    try {
+      await SubscriptionService.incrementUsage(userId.toString(), 'invoices', 1);
+      console.log('Usage incremented successfully for invoice creation');
+    } catch (error) {
+      console.error('Failed to increment usage:', error);
+      // Don't fail the request if usage tracking fails
+    }
 
     res.status(201).json({
       success: true,
@@ -369,7 +411,7 @@ export const downloadInvoicePDF = async (req: Request, res: Response): Promise<v
 
     const [invoice, seller] = await Promise.all([
       Invoice.findOne({ _id: id, userId }),
-      User.findById(userId)
+      User.findById(userId).lean(false) // Ensure we get the latest data, not cached
     ]);
     
     if (!invoice) {
@@ -388,6 +430,13 @@ export const downloadInvoicePDF = async (req: Request, res: Response): Promise<v
       return;
     }
 
+    // Debug: Log seller data to verify it's fresh
+    console.log(`🔍 Seller data for invoice ${invoice.invoiceNumber}:`, {
+      name: seller.name,
+      businessName: seller.businessName,
+      userId: seller._id
+    });
+
     // Generate PDF
     const pdfBuffer = await generateInvoicePDF({ invoice, seller });
 
@@ -404,6 +453,186 @@ export const downloadInvoicePDF = async (req: Request, res: Response): Promise<v
     res.status(500).json({
       success: false,
       message: 'Error generating PDF'
+    });
+  }
+};
+
+// Send invoice via email
+export const sendInvoiceEmail = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?._id;
+    const { id } = req.params;
+    const { email } = req.body;
+
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: 'User not authenticated'
+      });
+      return;
+    }
+
+    if (!email) {
+      res.status(400).json({
+        success: false,
+        message: 'Email address is required'
+      });
+      return;
+    }
+
+    // Find invoice and seller in parallel for better performance
+    const [invoice, seller] = await Promise.all([
+      Invoice.findOne({ _id: id, userId }),
+      User.findById(userId).lean(false) // Ensure we get the latest data, not cached
+    ]);
+
+    if (!invoice) {
+      res.status(404).json({
+        success: false,
+        message: 'Invoice not found'
+      });
+      return;
+    }
+
+    if (!seller) {
+      res.status(404).json({
+        success: false,
+        message: 'Seller not found'
+      });
+      return;
+    }
+
+    console.log(`📧 Starting email process for invoice ${invoice.invoiceNumber}`);
+
+    // Debug: Log seller data to verify it's fresh
+    console.log(`🔍 Seller data for email ${invoice.invoiceNumber}:`, {
+      name: seller.name,
+      businessName: seller.businessName,
+      userId: seller._id
+    });
+
+    const emailStartTime = Date.now();
+    const endEmailProcess = timeOperation('invoice_email_process');
+    const endPDFGeneration = timeOperation('pdf_generation');
+
+    // Generate PDF and prepare email data in parallel
+    const [pdfBuffer] = await Promise.all([
+      generateInvoicePDF({ invoice, seller })
+    ]);
+
+    endPDFGeneration({ invoiceNumber: invoice.invoiceNumber });
+
+    // Prepare invoice data for email
+    const invoiceData = {
+      invoiceNumber: invoice.invoiceNumber,
+      customerName: invoice.customer.name,
+      amount: invoice.grandTotal,
+      dueDate: invoice.dueDate,
+      businessName: seller.businessName || seller.name,
+      invoiceUrl: `${process.env.FRONTEND_URL}/dashboard/invoices/${invoice._id}`,
+      upiId: seller.upiId,
+      bankDetails: seller.bankDetails
+    };
+
+    // Queue email for background processing (much faster response)
+    const emailQueue = EmailQueueService.getInstance();
+    const jobId = await emailQueue.queueInvoiceEmail(email, invoiceData, pdfBuffer, true);
+
+    const emailEndTime = Date.now();
+    endEmailProcess({
+      invoiceNumber: invoice.invoiceNumber,
+      emailJobId: jobId,
+      recipientEmail: email
+    });
+
+    // Update invoice status to 'sent' if it was 'draft'
+    if (invoice.status === 'draft') {
+      invoice.status = 'sent';
+      await invoice.save();
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Invoice email queued successfully and will be sent shortly',
+      data: {
+        invoiceId: invoice._id,
+        invoiceNumber: invoice.invoiceNumber,
+        sentTo: email,
+        status: invoice.status,
+        emailJobId: jobId,
+        processingTime: `${emailEndTime - emailStartTime}ms`
+      }
+    });
+
+  } catch (error) {
+    console.error('Send invoice email error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error sending invoice email'
+    });
+  }
+};
+
+// Get email queue status (for debugging)
+export const getEmailQueueStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (process.env.NODE_ENV !== 'development') {
+      res.status(403).json({
+        success: false,
+        message: 'This endpoint is only available in development mode'
+      });
+      return;
+    }
+
+    const emailQueue = EmailQueueService.getInstance();
+    const status = emailQueue.getQueueStatus();
+
+    res.status(200).json({
+      success: true,
+      message: 'Email queue status retrieved',
+      data: status
+    });
+
+  } catch (error) {
+    console.error('Get email queue status error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving email queue status'
+    });
+  }
+};
+
+// Get performance statistics (for debugging)
+export const getPerformanceStats = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (process.env.NODE_ENV !== 'development') {
+      res.status(403).json({
+        success: false,
+        message: 'This endpoint is only available in development mode'
+      });
+      return;
+    }
+
+    const monitor = PerformanceMonitor.getInstance();
+    const { operation } = req.query;
+
+    const stats = monitor.getStats(operation as string);
+    const operations = monitor.getOperations();
+
+    res.status(200).json({
+      success: true,
+      message: 'Performance statistics retrieved',
+      data: {
+        stats,
+        availableOperations: operations
+      }
+    });
+
+  } catch (error) {
+    console.error('Get performance stats error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving performance statistics'
     });
   }
 };

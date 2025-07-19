@@ -1,0 +1,12 @@
+{
+  "input": "What’s the TDS rate for non-residents under Section 195?",
+  "output": "For FY 2025-26, TDS under Section 195 for non-residents varies by payment type (subject to DTAA):\n- **Royalties/Technical Services**: 20% + surcharge + 4% cess.\n- **Interest**: 20% + surcharge + cess.\n- **Dividends**: 20% + surcharge + cess.\nNo threshold limit applies. Example: ₹1,00,000 royalty payment → TDS = ₹24,800 (20% + 4% cess, no surcharge if income < ₹50 lakh). Obtain Form 15CA/CB and check DTAA benefits.",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.449323Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

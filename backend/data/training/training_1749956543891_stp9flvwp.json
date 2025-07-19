@@ -1,0 +1,8 @@
+{
+  "input": "What should be included in a professional invoice?",
+  "output": "Professional invoice must include:\n\n**Mandatory Details**:\n• Invoice number and date\n• Seller details (name, address, GSTIN if applicable)\n• Buyer details\n• Description of goods/services\n• Quantity and rate\n• Tax calculations\n• Total amount\n• Payment terms\n\n**For GST invoices, also include**:\n• HSN/SAC codes\n• Place of supply\n• CGST, SGST, IGST breakdown\n• Reverse charge clause (if applicable)\n\n**InvoNest Features**:\n✓ Pre-built professional templates\n✓ Automatic tax calculations\n✓ GST-compliant formats\n✓ Custom branding options",
+  "category": "invoicing",
+  "context": "business_process",
+  "confidence": 0.88,
+  "timestamp": "2025-06-15T03:02:23.887Z"
+}

@@ -112,7 +112,7 @@ const validateCustomer = (customer: any): string[] => {
 };
 
 // Validate invoice items
-const validateItems = (items: any[]): string[] => {
+const validateItems = (items: any[], invoiceType: 'gst' | 'non-gst' = 'gst'): string[] => {
   const errors: string[] = [];
 
   if (!Array.isArray(items) || items.length === 0) {
@@ -131,15 +131,27 @@ const validateItems = (items: any[]): string[] => {
     });
     if (descError) errors.push(descError);
 
-    // HSN code validation
-    const hsnError = validateField(item.hsn, `${itemPrefix} HSN/SAC code`, {
-      required: true,
-      minLength: 4,
-      maxLength: 10,
-      pattern: /^[0-9A-Z]+$/,
-      patternMessage: 'HSN/SAC code should contain only numbers and uppercase letters'
-    });
-    if (hsnError) errors.push(hsnError);
+    // HSN code validation - only required for GST invoices
+    if (invoiceType === 'gst') {
+      const hsnError = validateField(item.hsn, `${itemPrefix} HSN/SAC code`, {
+        required: true,
+        minLength: 4,
+        maxLength: 10,
+        pattern: /^[0-9A-Z]+$/,
+        patternMessage: 'HSN/SAC code should contain only numbers and uppercase letters'
+      });
+      if (hsnError) errors.push(hsnError);
+    } else if (item.hsn && item.hsn.trim() !== '') {
+      // Optional validation for non-GST invoices if HSN is provided
+      const hsnError = validateField(item.hsn, `${itemPrefix} HSN/SAC code`, {
+        required: false,
+        minLength: 4,
+        maxLength: 10,
+        pattern: /^[0-9A-Z]+$/,
+        patternMessage: 'HSN/SAC code should contain only numbers and uppercase letters'
+      });
+      if (hsnError) errors.push(hsnError);
+    }
 
     // Quantity validation
     const qtyError = validateField(item.quantity, `${itemPrefix} quantity`, {
@@ -181,14 +193,14 @@ export const validateInvoiceCreation = (
   res: Response,
   next: NextFunction
 ): void => {
-  const { customer, items, dueDate, notes, terms } = req.body;
+  const { customer, items, dueDate, notes, terms, invoiceType = 'gst' } = req.body;
   const errors: string[] = [];
 
   // Customer validation
   errors.push(...validateCustomer(customer));
 
   // Items validation
-  errors.push(...validateItems(items));
+  errors.push(...validateItems(items, invoiceType));
 
   // Due date validation (optional)
   if (dueDate) {
@@ -233,7 +245,7 @@ export const validateInvoiceUpdate = (
   res: Response,
   next: NextFunction
 ): void => {
-  const { customer, items, dueDate, notes, terms, status, paymentStatus, paymentDate } = req.body;
+  const { customer, items, dueDate, notes, terms, status, paymentStatus, paymentDate, invoiceType = 'gst' } = req.body;
   const errors: string[] = [];
 
   // Customer validation (if provided)
@@ -243,7 +255,7 @@ export const validateInvoiceUpdate = (
 
   // Items validation (if provided)
   if (items) {
-    errors.push(...validateItems(items));
+    errors.push(...validateItems(items, invoiceType));
   }
 
   // Due date validation (if provided)

@@ -5,7 +5,10 @@ import {
   markComplianceCompleted,
   updateComplianceSettings,
   addCustomCompliance,
-  getComplianceStats
+  getComplianceStats,
+  getUserCompliance,
+  getOverdueActivity,
+  clearUserCompliance
 } from '../controllers/complianceController';
 import { authenticate } from '../middleware/auth';
 import { validateComplianceCreation, validateComplianceUpdate } from '../middleware/complianceValidation';
@@ -14,6 +17,9 @@ const router = express.Router();
 
 // All routes require authentication
 router.use(authenticate);
+
+// Get user compliance data (for dashboard)
+router.get('/user-compliance', getUserCompliance);
 
 // Get compliance calendar
 router.get('/calendar', getComplianceCalendar);
@@ -24,6 +30,9 @@ router.get('/upcoming', getUpcomingDeadlines);
 // Get compliance statistics
 router.get('/stats', getComplianceStats);
 
+// Get overdue activity details
+router.get('/overdue-activity', getOverdueActivity);
+
 // Mark compliance as completed
 router.patch('/:complianceId/complete', markComplianceCompleted);
 
@@ -32,5 +41,8 @@ router.put('/:complianceId/settings', validateComplianceUpdate, updateCompliance
 
 // Add custom compliance item
 router.post('/custom', validateComplianceCreation, addCustomCompliance);
+
+// Clear all user compliance data (for removing fake data)
+router.delete('/clear-all', clearUserCompliance);
 
 export default router;

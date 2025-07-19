@@ -1,0 +1,8 @@
+{
+  "input": "How to choose payment gateway for my business?",
+  "output": "Payment gateway selection factors:\n\n**Popular Options**:\n• Razorpay: 2.36% + GST\n• PayU: 2.9% + GST\n• CCAvenue: 2.35% + GST\n• Paytm: 2.36% + GST\n\n**Consider**:\n• Transaction fees\n• Settlement time\n• Integration ease\n• Customer support\n• Security features\n\n**UPI Benefits**:\n• Lower costs\n• Instant settlements\n• Wide acceptance\n• QR code payments\n\nInvoNest integrates with Razorpay and supports UPI QR codes for seamless payment collection!",
+  "category": "payments",
+  "context": "business_setup",
+  "confidence": 0.85,
+  "timestamp": "2025-06-15T03:02:23.887Z"
+}

@@ -1,0 +1,12 @@
+{
+  "input": "How to file GSTR-3B for June 2025?",
+  "output": "To file GSTR-3B for June 2025 (due July 20, 2025):\n1. Log in to gst.gov.in.\n2. Navigate to Services > Returns > GSTR-3B.\n3. Enter outward supplies (Table 3.1) from GSTR-1.\n4. Input ITC details (Table 4) from GSTR-2B.\n5. Calculate tax liability and offset with ITC/cash (Table 6).\n6. Submit and pay via electronic cash/credit ledger.\n7. File with DSC/EVC.\nNote: From July 2025, Table 3 values are auto-locked from GSTR-1, so ensure GSTR-1 accuracy. InvoNest automates this.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.450700Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

@@ -1,0 +1,12 @@
+{
+  "input": "How does TCS work for selling on Amazon India?",
+  "output": "For selling on Amazon India in FY 2025-26, Amazon deducts TCS at 0.5% (0.25% CGST + 0.25% SGST or 0.5% IGST) under Section 52 of the CGST Act on the net sale value (excluding GST). Example:\n- Sale: ₹10,000 (excluding 18% GST = ₹1,800)\n- TCS: ₹10,000 × 0.5% = ₹50\n- You receive: ₹10,000 + ₹1,800 – ₹50 – commission\nAmazon deposits TCS by the 10th of next month and issues GSTR-8. Claim TCS as ITC in GSTR-3B. Register under GST to claim it.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.447558Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

@@ -1,0 +1,12 @@
+{
+  "input": "How does InvoNest help with GST filing?",
+  "output": "InvoNest simplifies GST filing in FY 2025-26 by:\n- Generating GST-compliant invoices with HSN/SAC codes and IRN (for e-invoicing).\n- Auto-calculating CGST, SGST, or IGST based on place of supply.\n- Syncing with GST portal for GSTR-1, GSTR-3B, and GSTR-7 filings.\n- Tracking ITC and generating GSTR-2B reconciliation reports.\n- Reminding you of due dates (e.g., GSTR-3B by 20th of next month).\n- Supporting TDS/TCS compliance for e-commerce sellers.\nTry InvoNest’s dashboard for a demo. Want to explore specific features?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.449323Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

@@ -178,6 +178,66 @@ export const calculateItemGST = (
 };
 
 /**
+ * Calculate simple invoice without GST (for non-GST registered businesses)
+ * @param items - Array of invoice items
+ * @returns Simple invoice calculation without GST
+ */
+export const calculateInvoiceSimple = (
+  items: Array<{
+    description: string;
+    hsn?: string;
+    quantity: number;
+    unit: string;
+    rate: number;
+    discount?: number;
+  }>
+): InvoiceCalculation => {
+  const calculatedItems = items.map(item => {
+    const discount = item.discount || 0;
+    const grossAmount = item.quantity * item.rate;
+    const discountAmount = (grossAmount * discount) / 100;
+    const taxableAmount = grossAmount - discountAmount;
+
+    return {
+      description: item.description,
+      hsn: item.hsn || '',
+      quantity: item.quantity,
+      unit: item.unit,
+      rate: item.rate,
+      discount,
+      taxableAmount,
+      gstRates: { cgst: 0, sgst: 0, igst: 0 },
+      cgstAmount: 0,
+      sgstAmount: 0,
+      igstAmount: 0,
+      totalAmount: taxableAmount
+    };
+  });
+
+  const subtotal = calculatedItems.reduce((sum, item) =>
+    sum + (item.quantity * item.rate), 0
+  );
+
+  const totalDiscount = calculatedItems.reduce((sum, item) =>
+    sum + ((item.quantity * item.rate * item.discount) / 100), 0
+  );
+
+  const taxableAmount = subtotal - totalDiscount;
+
+  return {
+    items: calculatedItems,
+    subtotal,
+    totalDiscount,
+    taxableAmount,
+    totalCGST: 0,
+    totalSGST: 0,
+    totalIGST: 0,
+    totalTax: 0,
+    grandTotal: taxableAmount
+  };
+};
+
+/**
  * Calculate complete invoice with GST
  * @param items - Array of invoice items
  * @param sellerState - Seller's state
@@ -196,15 +256,15 @@ export const calculateInvoiceGST = (
   sellerState: string,
   buyerState: string
 ): InvoiceCalculation => {
-  const calculatedItems = items.map(item => 
+  const calculatedItems = items.map(item =>
     calculateItemGST(item, sellerState, buyerState)
   );
-  
-  const subtotal = calculatedItems.reduce((sum, item) => 
+
+  const subtotal = calculatedItems.reduce((sum, item) =>
     sum + (item.quantity * item.rate), 0
   );
-  
-  const totalDiscount = calculatedItems.reduce((sum, item) => 
+
+  const totalDiscount = calculatedItems.reduce((sum, item) =>
     sum + ((item.quantity * item.rate * item.discount) / 100), 0
   );
   
@@ -247,20 +307,20 @@ export const calculateInvoiceGST = (
  */
 export const convertToInvoiceItems = (calculatedItems: ItemCalculation[]): IInvoiceItem[] => {
   return calculatedItems.map(item => ({
-    description: item.description,
-    hsn: item.hsn,
-    quantity: item.quantity,
-    unit: item.unit,
-    rate: item.rate,
-    discount: item.discount,
-    taxableAmount: item.taxableAmount,
-    cgstRate: item.gstRates.cgst,
-    sgstRate: item.gstRates.sgst,
-    igstRate: item.gstRates.igst,
-    cgstAmount: item.cgstAmount,
-    sgstAmount: item.sgstAmount,
-    igstAmount: item.igstAmount,
-    totalAmount: item.totalAmount
+    description: item.description || '',
+    hsn: item.hsn || '',
+    quantity: item.quantity || 0,
+    unit: item.unit || 'Nos',
+    rate: item.rate || 0,
+    discount: item.discount || 0,
+    taxableAmount: item.taxableAmount || 0,
+    cgstRate: item.gstRates?.cgst || 0,
+    sgstRate: item.gstRates?.sgst || 0,
+    igstRate: item.gstRates?.igst || 0,
+    cgstAmount: item.cgstAmount || 0,
+    sgstAmount: item.sgstAmount || 0,
+    igstAmount: item.igstAmount || 0,
+    totalAmount: item.totalAmount || 0
   }));
 };
 

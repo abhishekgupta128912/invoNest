@@ -1,0 +1,12 @@
+{
+  "input": "What’s the GST rate for agricultural equipment?",
+  "output": "For FY 2025-26, GST rates for agricultural equipment are:\n- **0%**: Hand tools, animal-driven implements.\n- **12%**: Machinery for soil preparation/harvesting (HSN: 8432).\n- **18%**: Machines for cleaning/sorting produce (HSN: 8437).\nNo rate changes proposed by the GST Council as of August 2024.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.455911Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

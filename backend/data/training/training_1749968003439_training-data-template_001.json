@@ -1,0 +1,12 @@
+{
+  "input": "Do I need GST registration if my turnover is ₹30 lakh in Karnataka?",
+  "output": "In Karnataka, for FY 2025-26, GST registration is mandatory if your annual turnover exceeds ₹40 lakh for services or ₹20 lakh for goods. Since your turnover is ₹30 lakh, registration is not mandatory unless you supply goods or engage in inter-state supplies. Voluntary registration allows you to claim input tax credit (ITC) and attract B2B clients. Do you supply goods, services, or both?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.439483Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

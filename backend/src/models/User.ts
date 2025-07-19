@@ -7,6 +7,8 @@ export interface IUser extends Document {
   password: string;
   role: 'user' | 'admin';
   businessName?: string;
+  logo?: string;
+  signature?: string;
   gstNumber?: string;
   phone?: string;
   address?: {
@@ -16,9 +18,29 @@ export interface IUser extends Document {
     pincode: string;
     country: string;
   };
+
+  // Payment information
+  upiId?: string;
+  bankDetails?: {
+    accountNumber?: string;
+    ifscCode?: string;
+    bankName?: string;
+    accountHolderName?: string;
+  };
+
   isEmailVerified: boolean;
+  emailVerificationToken?: string;
+  emailVerificationExpires?: Date;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
   isActive: boolean;
   lastLogin?: Date;
+  paymentReminderSettings?: {
+    enabled: boolean;
+    reminderDays: number[]; // Days before due date
+    overdueReminderDays: number[]; // Days after due date
+    maxReminders: number;
+  };
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -53,7 +75,15 @@ const UserSchema = new Schema<IUser>({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    minlength: [6, 'Password must be at least 6 characters'],
+    minlength: [8, 'Password must be at least 8 characters'],
+    validate: {
+      validator: function(password: string) {
+        // Strong password requirements
+        const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+        return strongPasswordRegex.test(password);
+      },
+      message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+    },
     select: false // Don't include password in queries by default
   },
   role: {
@@ -65,6 +95,30 @@ const UserSchema = new Schema<IUser>({
     type: String,
     trim: true,
     maxlength: [100, 'Business name cannot exceed 100 characters']
+  },
+  logo: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: function(v: string) {
+        if (!v) return true; // Optional field
+        // Validate file extension for images
+        return /\.(jpg|jpeg|png|gif|svg|webp)$/i.test(v);
+      },
+      message: 'Logo must be a valid image file (jpg, jpeg, png, gif, svg, webp)'
+    }
+  },
+  signature: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: function(v: string) {
+        if (!v) return true; // Optional field
+        // Validate file extension for images
+        return /\.(jpg|jpeg|png|gif|svg|webp)$/i.test(v);
+      },
+      message: 'Signature must be a valid image file (jpg, jpeg, png, gif, svg, webp)'
+    }
   },
   gstNumber: {
     type: String,
@@ -84,9 +138,64 @@ const UserSchema = new Schema<IUser>({
     ]
   },
   address: AddressSchema,
+
+  // Payment information
+  upiId: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: function(v: string) {
+        if (!v) return true; // Optional field
+        // Enhanced UPI ID validation
+        const upiRegex = /^[\w.-]+@[\w.-]+$/;
+        return upiRegex.test(v);
+      },
+      message: 'Please enter a valid UPI ID (e.g., user@paytm, 9876543210@ybl)'
+    }
+  },
+  bankDetails: {
+    accountNumber: {
+      type: String,
+      trim: true
+    },
+    ifscCode: {
+      type: String,
+      trim: true,
+      uppercase: true,
+      match: [
+        /^[A-Z]{4}0[A-Z0-9]{6}$/,
+        'Please enter a valid IFSC code'
+      ]
+    },
+    bankName: {
+      type: String,
+      trim: true
+    },
+    accountHolderName: {
+      type: String,
+      trim: true
+    }
+  },
+
   isEmailVerified: {
     type: Boolean,
     default: false
+  },
+  emailVerificationToken: {
+    type: String,
+    select: false // Don't include in queries by default
+  },
+  emailVerificationExpires: {
+    type: Date,
+    select: false // Don't include in queries by default
+  },
+  passwordResetToken: {
+    type: String,
+    select: false // Don't include in queries by default
+  },
+  passwordResetExpires: {
+    type: Date,
+    select: false // Don't include in queries by default
   },
   isActive: {
     type: Boolean,
@@ -94,13 +203,30 @@ const UserSchema = new Schema<IUser>({
   },
   lastLogin: {
     type: Date
+  },
+  paymentReminderSettings: {
+    enabled: {
+      type: Boolean,
+      default: true
+    },
+    reminderDays: {
+      type: [Number],
+      default: [7, 3, 1] // 7, 3, 1 days before due date
+    },
+    overdueReminderDays: {
+      type: [Number],
+      default: [1, 7, 14] // 1, 7, 14 days after due date
+    },
+    maxReminders: {
+      type: Number,
+      default: 5
+    }
   }
 }, {
   timestamps: true
 });
 
-// Index for better query performance
-UserSchema.index({ email: 1 });
+// Index for better query performance (email index is already created by unique: true)
 UserSchema.index({ gstNumber: 1 });
 
 // Hash password before saving

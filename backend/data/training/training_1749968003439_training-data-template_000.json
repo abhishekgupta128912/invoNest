@@ -1,0 +1,12 @@
+{
+  "input": "What are the GST rates in India for FY 2025-26?",
+  "output": "For FY 2025-26, GST rates in India remain structured across five primary slabs: 0% (nil-rated), 5%, 12%, 18%, and 28%. Additionally, special rates of 3% (e.g., gold) and 0.25% (e.g., rough precious stones) apply. Key examples:\n- **0%**: Milk, eggs, fresh vegetables, books, educational services.\n- **5%**: Packaged food, edible oils, footwear (< ₹500), transport services.\n- **12%**: Butter, ghee, bricks, construction services.\n- **18%**: Mobile phones, cosmetics, telecom services, software services.\n- **28%**: Luxury cars, tobacco, aerated drinks.\nCess applies to items like tobacco (1%-204%) and luxury vehicles. The 56th GST Council meeting (expected June 2025) may introduce rate rationalization, so check gst.gov.in for updates.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.439483Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

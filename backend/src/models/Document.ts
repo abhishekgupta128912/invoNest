@@ -179,7 +179,7 @@ const DocumentSchema = new Schema<IDocument>({
 DocumentSchema.index({ userId: 1, category: 1 });
 DocumentSchema.index({ userId: 1, createdAt: -1 });
 DocumentSchema.index({ tags: 1 });
-DocumentSchema.index({ hash: 1 });
+// Note: hash field already has unique index from schema definition
 DocumentSchema.index({ blockchainHash: 1 });
 
 // Virtual for file size in human readable format

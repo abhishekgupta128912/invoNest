@@ -1,0 +1,12 @@
+{
+  "input": "What’s the penalty for late GSTR-3B filing in FY 2025-26?",
+  "output": "For FY 2025-26, the penalty for late GSTR-3B filing is:\n- **Nil Return**: ₹500 (₹250 CGST + ₹250 SGST).\n- **Non-Nil Return**: ₹2,000 (₹1,000 CGST + ₹1,000 SGST).\nLate fees: ₹50/day (₹25 CGST + ₹25 SGST), capped at ₹5,000 per return. File by July 20, 2025, to avoid penalties. InvoNest sends reminders.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.450700Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

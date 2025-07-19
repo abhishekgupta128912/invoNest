@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "name": "invonest-frontend",
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/.next",
+  "installCommand": "cd frontend && npm install",
+  "framework": "nextjs",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://your-backend-app.onrender.com",
+    "NEXT_PUBLIC_RECAPTCHA_SITE_KEY": "",
+    "NEXT_TELEMETRY_DISABLED": "1"
+  },
+  "build": {
+    "env": {
+      "NEXT_TELEMETRY_DISABLED": "1"
+    }
+  },
+  "functions": {
+    "frontend/src/app/**/*.js": {
+      "maxDuration": 30
+    }
+  },
+  "regions": ["bom1"],
+  "github": {
+    "silent": true
+  }
+}

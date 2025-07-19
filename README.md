@@ -32,9 +32,9 @@
 - **Polygon Mumbai** testnet for blockchain
 
 ### Deployment
-- **Frontend**: Vercel (free tier)
-- **Backend**: Render/Railway (free tier)
-- **Database**: MongoDB Atlas (512MB free)
+- **Frontend**: Vercel (free tier) - [Deploy Guide](./DEPLOYMENT.md)
+- **Backend**: Render (free tier) - [Deploy Guide](./DEPLOYMENT.md)
+- **Database**: MongoDB Atlas (512MB free) - [Setup Guide](./MONGODB_ATLAS_SETUP.md)
 
 ## 🚀 Quick Start
 
@@ -70,6 +70,19 @@ npm run dev
 4. **Access the application**
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:5000
+
+## 🚀 Deployment
+
+Ready to deploy? Follow our comprehensive guides:
+
+- **[📖 Deployment Guide](./DEPLOYMENT.md)** - Complete deployment instructions
+- **[🗄️ MongoDB Atlas Setup](./MONGODB_ATLAS_SETUP.md)** - Database configuration
+- **[📚 GitHub Setup](./GITHUB_SETUP.md)** - Repository management
+- **[🔧 Environment Variables](./ENVIRONMENT_VARIABLES.md)** - Configuration reference
+
+### Live Demo
+- **Frontend**: [https://invonest.vercel.app](https://invonest.vercel.app)
+- **Backend API**: [https://invonest-backend.onrender.com](https://invonest-backend.onrender.com)
 
 ## 📁 Project Structure
 
@@ -122,7 +135,7 @@ PRIVATE_KEY=your-wallet-private-key
 - [x] Setup development environment
 
 ### 🔄 Day 2: Authentication & User Management
-- [ ] Implement JWT-based authentication
+- [X] Implement JWT-based authentication
 - [ ] Create user registration/login
 - [ ] Setup role-based access control
 - [ ] Configure security middleware
@@ -153,11 +166,11 @@ PRIVATE_KEY=your-wallet-private-key
 - [x] Build drag-and-drop file upload UI
 - [x] Implement document security and hash verification
 
-### 🔄 Day 7: Integration & Deployment
-- [ ] Connect all modules
-- [ ] Setup production environment
-- [ ] Deploy to Vercel and Render
-- [ ] Configure domain and SSL
+### ✅ Day 7: Integration & Deployment
+- [x] Connect all modules
+- [x] Setup production environment
+- [x] Deploy to Vercel and Render
+- [x] Configure domain and SSL
 
 ## 🤝 Contributing
 

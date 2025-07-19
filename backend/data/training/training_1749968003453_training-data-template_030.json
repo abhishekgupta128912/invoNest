@@ -1,0 +1,12 @@
+{
+  "input": "What’s the GST rate for luxury hotel stays in 2025?",
+  "output": "For FY 2025-26, luxury hotel stays (SAC: 9963) are taxed at 28% GST if the tariff exceeds ₹7,500 per night. For tariffs ≤ ₹7,500, it’s 18%. Example: ₹10,000/night → GST = ₹2,800. Hotels issue invoices with SAC codes and file GSTR-1.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.453052Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

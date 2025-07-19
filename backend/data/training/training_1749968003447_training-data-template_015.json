@@ -1,0 +1,12 @@
+{
+  "input": "What’s the new TDS rule for partner remuneration in FY 2025-26?",
+  "output": "From April 1, 2025, Section 194T (introduced in Budget 2024) mandates 10% TDS on payments to partners (e.g., remuneration, commission, interest, bonus) exceeding ₹20,000 per financial year by partnership firms/LLPs. Example: ₹50,000 remuneration → ₹5,000 TDS. Deposit by the 7th of next month, file Form 26Q. This increases compliance for partnerships.",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.447558Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

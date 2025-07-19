@@ -1,0 +1,12 @@
+{
+  "input": "What’s the GST implication for SEZ supplies?",
+  "output": "For FY 2025-26, supplies to SEZ units/developers are zero-rated under Section 16 of the IGST Act. Options:\n1. Supply under LUT without paying GST, claim ITC.\n2. Pay IGST and claim a refund post-supply.\nSteps:\n- Issue invoice with ‘Supply to SEZ’ and SEZ GSTIN.\n- File GSTR-1 with SEZ details.\n- Submit proof of receipt by SEZ for refunds.\nInvoNest supports SEZ invoicing.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.454134Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

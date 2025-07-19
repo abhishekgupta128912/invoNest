@@ -1,0 +1,8 @@
+{
+  "input": "What are the current GST rates in India?",
+  "output": "GST rates in India are structured as follows:\n• 0% - Essential items like milk, bread, vegetables, books\n• 5% - Basic necessities like sugar, tea, coffee, edible oil\n• 12% - Standard goods like computers, processed food\n• 18% - Most goods and services including soaps, IT services\n• 28% - Luxury items like cars, tobacco, aerated drinks\n\nSpecial rates include 0.25% for rough precious stones and 3% for gold, silver, platinum.",
+  "category": "gst",
+  "context": "tax_rates",
+  "confidence": 0.95,
+  "timestamp": "2025-06-15T03:02:23.887Z"
+}

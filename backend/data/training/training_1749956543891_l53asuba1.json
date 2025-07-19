@@ -1,0 +1,8 @@
+{
+  "input": "What are TDS rates for professional services?",
+  "output": "TDS rates for professional/technical services:\n\n• **Rate**: 10% under Section 194J\n• **Threshold**: ₹30,000 per year\n• **Applicable to**: Fees for professional services, technical services, royalty, non-compete fees\n\n**Other common TDS rates**:\n• Salary: As per tax slab\n• Rent: 10% (threshold ₹2,40,000/year)\n• Interest: 10% (threshold ₹5,000/year)\n• Commission: 5%\n• Contractor payments: 1-2%\n\nAlways verify current rates on the Income Tax website as they may change.",
+  "category": "tds",
+  "context": "tax_rates",
+  "confidence": 0.9,
+  "timestamp": "2025-06-15T03:02:23.887Z"
+}

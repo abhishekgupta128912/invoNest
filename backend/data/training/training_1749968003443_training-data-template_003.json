@@ -1,0 +1,12 @@
+{
+  "input": "What’s the TDS rate for professional services in FY 2025-26?",
+  "output": "For FY 2025-26, under Section 194J, the TDS rate for professional services is 10% if payments exceed ₹30,000 per year to a resident. For non-residents, rates vary under Section 195 (e.g., 20% plus surcharge/cess, subject to DTAA). Ensure you obtain a TAN and file TDS returns quarterly in Form 26Q.",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.443522Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

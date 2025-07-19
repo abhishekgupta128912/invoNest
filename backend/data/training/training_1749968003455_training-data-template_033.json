@@ -1,0 +1,12 @@
+{
+  "input": "What’s the TDS rate for commission under Section 194H?",
+  "output": "For FY 2025-26, under Section 194H, TDS on commission or brokerage is 5% if payments exceed ₹20,000 per year (increased from ₹15,000 in Budget 2025). Example: ₹50,000 commission → TDS = ₹2,500. Deposit by the 7th of next month, file Form 26Q.",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.455130Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

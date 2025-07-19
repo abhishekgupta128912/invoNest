@@ -1,0 +1,12 @@
+{
+  "input": "What’s the GST rate for consultancy services?",
+  "output": "For FY 2025-26, consultancy services (SAC: 9983) are taxed at 18% GST. Example: ₹50,000 consultancy fee → CGST (9%) = ₹4,500, SGST (9%) = ₹4,500 (intra-state) or IGST (18%) = ₹9,000 (inter-state). Issue GST-compliant invoices and file GSTR-3B. InvoNest simplifies this.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.452723Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

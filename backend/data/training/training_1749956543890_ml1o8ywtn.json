@@ -1,0 +1,8 @@
+{
+  "input": "How do I register for GST?",
+  "output": "GST registration process:\n\n1. **Eligibility**: Mandatory if turnover > ₹40 lakhs (₹20 lakhs for special states)\n\n2. **Required Documents**:\n   • PAN card\n   • Aadhaar card\n   • Business registration certificate\n   • Bank account details\n   • Digital signature (for companies)\n\n3. **Process**:\n   • Visit GST portal (gst.gov.in)\n   • Fill Form GST REG-01\n   • Upload documents\n   • Pay application fee\n   • Receive GSTIN in 3-7 days\n\nInvoNest provides GST-compliant invoice templates once you're registered!",
+  "category": "gst",
+  "context": "registration_process",
+  "confidence": 0.92,
+  "timestamp": "2025-06-15T03:02:23.887Z"
+}

@@ -1,0 +1,8 @@
+{
+  "input": "What are tax obligations for freelancers in India?",
+  "output": "Freelancer tax obligations in India:\n\n**Income Tax**:\n• File ITR-3 for business income\n• Maintain books if turnover > ₹25 lakhs\n• Pay advance tax if liability > ₹10,000\n\n**GST Registration**:\n• Mandatory if turnover > ₹40 lakhs\n• Voluntary for lower turnover\n• Benefits: Input tax credit, business credibility\n\n**TDS Considerations**:\n• Clients may deduct 10% TDS on payments > ₹30,000/year\n• Collect TDS certificates\n• Claim credit in ITR\n\n**Professional Tax**:\n• State-specific (₹200-2,500/year)\n• Registration required in some states\n\nInvoNest helps freelancers with professional invoicing and tax compliance!",
+  "category": "freelancer",
+  "context": "tax_compliance",
+  "confidence": 0.87,
+  "timestamp": "2025-06-15T03:02:23.887Z"
+}

@@ -1,0 +1,12 @@
+{
+  "input": "How to register a private limited company in India?",
+  "output": "To register a private limited company in FY 2025-26:\n1. Obtain DSC (Digital Signature Certificate) for directors.\n2. Apply for DIN (Director Identification Number) via MCA portal.\n3. Reserve name via SPICe+ (Part A) on mca.gov.in.\n4. File SPICe+ (Part B) with MoA, AoA, PAN, TAN, and address proof.\n5. Pay fees (₹1,000–₹5,000 based on capital).\n6. Obtain Certificate of Incorporation, PAN, and TAN within 7–10 days.\n7. Register for GST if turnover > ₹40 lakh (services) or ₹20 lakh (goods).\n8. Open a bank account and comply with ROC filings.\nUse IndiaFilings or InvoNest for assistance. Need help with documents?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.447558Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

@@ -1,0 +1,12 @@
+{
+  "input": "Create a sample GST invoice for a ₹10,000 service.",
+  "output": "**Invoice**\n- Invoice No: INV-001\n- Date: 15/06/2025\n- Supplier: ABC Services, 123 Bangalore, GSTIN: 29XXXXX1234Z\n- Recipient: XYZ Ltd, 456 Mumbai, GSTIN: 27XXXXX5678Y\n- Place of Supply: Maharashtra\n- Service: Software Development (SAC: 998314)\n- Taxable Value: ₹10,000\n- IGST (18%): ₹1,800\n- Total: ₹11,800\n- Terms: Due in 15 days\nGenerated via InvoNest for compliance. Need help uploading to the GST portal?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.445537Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

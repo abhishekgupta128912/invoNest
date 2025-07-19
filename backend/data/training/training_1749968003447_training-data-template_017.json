@@ -1,0 +1,12 @@
+{
+  "input": "What are the benefits of UPI payments for businesses?",
+  "output": "For businesses in FY 2025-26, UPI payments offer:\n- **Instant Settlement**: Real-time transfers via NPCI.\n- **Low Cost**: Zero/low fees compared to card payments.\n- **Wide Reach**: Over 300 million users (e.g., Google Pay, PhonePe).\n- **GST Compliance**: Digital trail for audits.\n- **Dynamic QR**: Simplifies payments (e.g., Razorpay integration).\nRegister with a PSP (e.g., Razorpay) and link a business account. InvoNest integrates UPI for seamless invoicing. Need setup guidance?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.447558Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

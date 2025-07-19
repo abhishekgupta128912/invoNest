@@ -1,0 +1,12 @@
+{
+  "input": "How to set up Razorpay for UPI payments?",
+  "output": "To set up Razorpay for UPI payments in FY 2025-26:\n1. Sign up on razorpay.com with business PAN and bank details.\n2. Complete KYC (upload GSTIN, Aadhaar, etc.).\n3. Enable UPI in Razorpay Dashboard > Payment Methods.\n4. Generate a dynamic QR code or UPI ID (e.g., business@razorpay).\n5. Integrate via API or plugins (e.g., WooCommerce) for e-commerce.\n6. Settle funds daily to your bank account (fees: ~0.4%).\nInvoNest integrates Razorpay for seamless payments. Need API integration help?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.454134Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

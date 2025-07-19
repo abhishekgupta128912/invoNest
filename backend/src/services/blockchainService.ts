@@ -52,12 +52,18 @@ export class BlockchainService {
 
     // Initialize wallet
     const privateKey = process.env.PRIVATE_KEY;
-    if (!privateKey) {
-      console.warn('PRIVATE_KEY not found in environment variables. Blockchain features will be disabled.');
+    if (!privateKey || privateKey === '0x0000000000000000000000000000000000000000000000000000000000000000') {
+      console.warn('PRIVATE_KEY not found or invalid in environment variables. Blockchain features will be disabled.');
       return;
     }
 
-    this.wallet = new ethers.Wallet(privateKey, this.provider);
+    try {
+      this.wallet = new ethers.Wallet(privateKey, this.provider);
+    } catch (error) {
+      console.warn('Invalid PRIVATE_KEY format. Blockchain features will be disabled.');
+      console.error('Private key error:', error instanceof Error ? error.message : String(error));
+      return;
+    }
 
     // Initialize contract
     this.contract = new ethers.Contract(CONTRACT_ADDRESS, INVOICE_VERIFIER_ABI, this.wallet);

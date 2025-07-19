@@ -1,0 +1,12 @@
+{
+  "input": "What’s the GST rate for online gaming services?",
+  "output": "For FY 2025-26, online gaming services (SAC: 998439) are taxed at 28% GST on the full value of consideration (not just platform fees). Example: ₹1,000 game entry → GST = ₹280. File GSTR-1 and GSTR-3B. Ensure HSN/SAC accuracy to avoid notices.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.458334Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

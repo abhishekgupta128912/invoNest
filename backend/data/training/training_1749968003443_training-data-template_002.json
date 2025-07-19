@@ -1,0 +1,12 @@
+{
+  "input": "I supply services, mostly to clients in Maharashtra.",
+  "output": "Since you supply services inter-state (Karnataka to Maharashtra), GST registration is mandatory regardless of your ₹30 lakh turnover, as per Section 24 of the CGST Act. You’ll need to charge IGST (e.g., 18% for most services) and file GSTR-1 and GSTR-3B. Steps: Visit gst.gov.in, fill GST REG-01, upload PAN, Aadhaar, and bank details, and obtain GSTIN within 7 days. Need help with the registration process?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.443522Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

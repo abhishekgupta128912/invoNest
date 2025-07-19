@@ -1,0 +1,12 @@
+{
+  "input": "What’s the due date for ITR-3 filing in FY 2025-26?",
+  "output": "For FY 2025-26 (AY 2026-27), the due date for filing ITR-3 (for individuals/HUFs with business/profession income) is September 15, 2026, for non-audit cases. For audit cases, it’s October 31, 2026. Late filing incurs a penalty of ₹5,000 (₹1,000 if income < ₹5 lakh) plus 1% interest per month under Section 234A.",
+  "category": "income_tax",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.453052Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

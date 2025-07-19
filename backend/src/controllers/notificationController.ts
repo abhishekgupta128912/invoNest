@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Notification, NotificationPreference } from '../models/Notification';
-import emailService from '../services/emailService';
+import getEmailService from '../services/emailService';
 
 // Get user's notifications
 export const getNotifications = async (req: Request, res: Response) => {
@@ -294,6 +294,7 @@ async function processNotification(notification: any): Promise<void> {
       const emailAddress = preferences.emailAddress || notification.userId.email;
       
       if (notification.emailDetails) {
+        const emailService = getEmailService();
         const success = await emailService.sendEmail(
           emailAddress,
           notification.emailDetails.subject,

@@ -1,0 +1,12 @@
+{
+  "input": "I paid ₹50,000 to a freelancer. How much TDS should I deduct?",
+  "output": "For a payment of ₹50,000 to a freelancer (professional services) in FY 2025-26, deduct TDS at 10% under Section 194J, as the amount exceeds the ₹30,000 threshold. TDS = ₹50,000 × 10% = ₹5,000. Pay the freelancer ₹45,000 and deposit ₹5,000 to the government by the 7th of the next month. Issue Form 16A via TRACES. Does the freelancer have a lower TDS certificate?",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.443522Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

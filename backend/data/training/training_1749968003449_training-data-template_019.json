@@ -1,0 +1,12 @@
+{
+  "input": "What’s the GST rate for anti-corrosion paints supplied to Indian Railways?",
+  "output": "For FY 2025-26, anti-corrosion paints (HSN: 3208) are taxed at 18% GST. For a ₹4,00,000 supply to Indian Railways (intra-state):\n- Taxable value: ₹4,00,000\n- CGST (9%): ₹36,000\n- SGST (9%): ₹36,000\n- Total: ₹4,72,000\nRailways deduct 2% TDS (1% CGST + 1% SGST = ₹8,000) under Section 51, paying you ₹4,64,000. File GSTR-7 by the 10th of next month.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.449323Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

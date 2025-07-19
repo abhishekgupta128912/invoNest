@@ -1,0 +1,12 @@
+{
+  "input": "How to file TDS return for Q1 2025-26?",
+  "output": "To file TDS return for Q1 (April–June) 2025-26 (due July 31, 2025):\n1. Log in to TRACES (tdscpc.gov.in) with TAN.\n2. Download Form 26Q (non-salary) or 24Q (salary).\n3. Fill deductee details (PAN, payment, TDS amount).\n4. Validate using RPU (Return Preparation Utility).\n5. Generate FVU file and upload on e-filing portal (incometax.gov.in).\n6. Sign with DSC.\n7. Issue Form 16/16A to deductees.\nInvoNest automates TDS return preparation.",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.458845Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

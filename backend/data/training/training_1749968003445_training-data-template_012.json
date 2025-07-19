@@ -1,0 +1,12 @@
+{
+  "input": "No GST registration yet. Should I get one?",
+  "output": "With ₹10 lakh turnover, GST registration isn’t mandatory unless you supply inter-state services or sell goods (> ₹20 lakh). Benefits of voluntary registration:\n- Claim ITC on expenses (e.g., software, internet).\n- Attract B2B clients who prefer GST-registered vendors.\n- Avoid reverse charge for inter-state clients.\nDownside: Monthly/quarterly compliance. Register via gst.gov.in using TAN if no PAN. InvoNest simplifies GST filing. Do you have inter-state clients?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.445537Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

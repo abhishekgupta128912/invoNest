@@ -1,0 +1,12 @@
+{
+  "input": "I’m a freelancer with ₹10 lakh turnover. What taxes do I pay?",
+  "output": "As a freelancer with ₹10 lakh turnover in FY 2025-26:\n- **GST**: Mandatory registration if inter-state supplies or turnover > ₹40 lakh (services). Charge 18% IGST/CGST+SGST, file GSTR-3B monthly/quarterly. Claim ITC on business expenses.\n- **Income Tax**: Under new regime, tax on ₹10 lakh (after ₹75,000 standard deduction) is ~₹45,000 (including cess). Old regime may save more with deductions (e.g., 80C, 80D). File ITR-3 by September 15, 2025.\n- **TDS**: Clients deduct 10% TDS (Section 194J) if payments > ₹30,000/year. Reconcile with Form 26AS.\nUse InvoNest for GST-compliant invoicing. Are you registered under GST?",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.445537Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

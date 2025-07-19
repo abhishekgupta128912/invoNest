@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: invonest-backend
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        fromDatabase:
+          name: invonest-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://invonest.vercel.app
+    autoDeploy: true
+
+databases:
+  - name: invonest-db
+    databaseName: invonest
+    user: invonest_user
+    region: singapore
+    plan: free

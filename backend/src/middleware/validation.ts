@@ -12,19 +12,25 @@ const validateField = (
     patternMessage?: string;
   }
 ): string | null => {
-  if (rules.required && (!value || value.toString().trim() === '')) {
-    return `${fieldName} is required`;
+  // Skip validation for empty/null/undefined values unless required
+  if (!value || value.toString().trim() === '') {
+    if (rules.required) {
+      return `${fieldName} is required`;
+    }
+    return null; // Skip validation for empty optional fields
   }
 
-  if (value && rules.minLength && value.toString().length < rules.minLength) {
+  const trimmedValue = value.toString().trim();
+
+  if (rules.minLength && trimmedValue.length < rules.minLength) {
     return `${fieldName} must be at least ${rules.minLength} characters long`;
   }
 
-  if (value && rules.maxLength && value.toString().length > rules.maxLength) {
+  if (rules.maxLength && trimmedValue.length > rules.maxLength) {
     return `${fieldName} cannot exceed ${rules.maxLength} characters`;
   }
 
-  if (value && rules.pattern && !rules.pattern.test(value.toString())) {
+  if (rules.pattern && !rules.pattern.test(trimmedValue)) {
     return rules.patternMessage || `${fieldName} format is invalid`;
   }
 
@@ -148,6 +154,8 @@ export const validateProfileUpdate = (
   const { name, businessName, gstNumber, phone, address } = req.body;
   const errors: string[] = [];
 
+  console.log('Profile update validation - received data:', { name, businessName, gstNumber, phone, address });
+
   // Name validation (optional for update)
   if (name) {
     const nameError = validateField(name, 'Name', {
@@ -216,6 +224,7 @@ export const validateProfileUpdate = (
   }
 
   if (errors.length > 0) {
+    console.log('Profile update validation errors:', errors);
     res.status(400).json({
       success: false,
       message: 'Validation failed',
@@ -224,5 +233,6 @@ export const validateProfileUpdate = (
     return;
   }
 
+  console.log('Profile update validation passed');
   next();
 };

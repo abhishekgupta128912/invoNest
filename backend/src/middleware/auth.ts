@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken, JWTPayload } from '../utils/jwt';
 import User, { IUser } from '../models/User';
+import { tokenBlacklist } from '../services/tokenBlacklistService';
+import { securityMonitoring, SecurityEventType, SecuritySeverity } from '../services/securityMonitoringService';
+import { isAdminUserId, createAdminUserObject } from '../utils/adminAuth';
 
 // Extend Request interface to include user
 declare global {
@@ -9,6 +12,11 @@ declare global {
       user?: IUser;
     }
   }
+}
+
+// Export AuthRequest interface for use in controllers
+export interface AuthRequest extends Request {
+  user?: IUser;
 }
 
 export const authenticate = async (
@@ -37,30 +45,69 @@ export const authenticate = async (
       return;
     }
 
+    // Check if token is blacklisted
+    const isBlacklisted = await tokenBlacklist.isTokenBlacklisted(token);
+    if (isBlacklisted) {
+      securityMonitoring.logSecurityEvent({
+        type: SecurityEventType.UNAUTHORIZED_ACCESS,
+        severity: SecuritySeverity.MEDIUM,
+        message: 'Attempt to use blacklisted token',
+        ip: req.ip || 'unknown',
+        userAgent: req.get('User-Agent'),
+        path: req.path,
+        method: req.method,
+        timestamp: new Date(),
+        metadata: { token: token.substring(0, 20) + '...' }
+      });
+
+      res.status(401).json({
+        success: false,
+        message: 'Token has been invalidated. Please login again.'
+      });
+      return;
+    }
+
     // Verify token
     const decoded: JWTPayload = verifyToken(token);
-    
-    // Get user from database
-    const user = await User.findById(decoded.userId).select('-password');
-    
-    if (!user) {
+
+    // Check if user is globally blacklisted
+    const isUserBlacklisted = await tokenBlacklist.isUserBlacklisted(decoded.userId);
+    if (isUserBlacklisted) {
       res.status(401).json({
         success: false,
-        message: 'Token is valid but user not found.'
+        message: 'Account access has been suspended. Please contact support.'
       });
       return;
     }
 
-    if (!user.isActive) {
-      res.status(401).json({
-        success: false,
-        message: 'Account is deactivated. Please contact support.'
-      });
-      return;
-    }
+    // Check if this is an admin user
+    if (isAdminUserId(decoded.userId)) {
+      // Handle admin user
+      const adminUser = createAdminUserObject();
+      req.user = adminUser as any;
+    } else {
+      // Get regular user from database
+      const user = await User.findById(decoded.userId).select('-password');
 
-    // Attach user to request object
-    req.user = user;
+      if (!user) {
+        res.status(401).json({
+          success: false,
+          message: 'Token is valid but user not found.'
+        });
+        return;
+      }
+
+      if (!user.isActive) {
+        res.status(401).json({
+          success: false,
+          message: 'Account is deactivated. Please contact support.'
+        });
+        return;
+      }
+
+      // Attach user to request object
+      req.user = user;
+    }
     next();
     
   } catch (error) {
@@ -107,10 +154,18 @@ export const optionalAuth = async (
       
       if (token) {
         const decoded: JWTPayload = verifyToken(token);
-        const user = await User.findById(decoded.userId).select('-password');
-        
-        if (user && user.isActive) {
-          req.user = user;
+
+        if (isAdminUserId(decoded.userId)) {
+          // Handle admin user
+          const adminUser = createAdminUserObject();
+          req.user = adminUser as any;
+        } else {
+          // Handle regular user
+          const user = await User.findById(decoded.userId).select('-password');
+
+          if (user && user.isActive) {
+            req.user = user;
+          }
         }
       }
     }

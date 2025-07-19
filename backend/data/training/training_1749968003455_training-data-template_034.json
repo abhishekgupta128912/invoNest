@@ -1,0 +1,12 @@
+{
+  "input": "How to generate e-invoices for B2B supplies?",
+  "output": "To generate e-invoices for B2B supplies in FY 2025-26 (mandatory for turnover > ₹5 crore):\n1. Create invoice with GSTIN, HSN/SAC, and tax details.\n2. Log in to einvoice.gst.gov.in or use an API (e.g., InvoNest).\n3. Upload invoice JSON to generate IRN and QR code.\n4. Download signed e-invoice and share with buyer.\n5. Auto-populate in GSTR-1. File by the 11th of next month.\nInvoNest automates e-invoicing.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.455503Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

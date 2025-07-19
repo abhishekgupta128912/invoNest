@@ -1,16 +1,6 @@
-import OpenAI from 'openai';
 import fs from 'fs/promises';
 import path from 'path';
 import { PDFExtract } from 'pdf.js-extract';
-
-// Initialize OpenAI client (only if API key is available)
-let openai: OpenAI | null = null;
-
-if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-openai-api-key-here') {
-  openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-  });
-}
 
 export interface ParsedDocumentData {
   text: string;
@@ -129,92 +119,188 @@ export class DocumentParsingService {
   }
 
   /**
-   * Use AI to analyze and extract structured data from text
+   * Rule-based text analysis as fallback when AI is not available
    */
-  private async analyzeTextWithAI(text: string): Promise<Partial<ParsedDocumentData>> {
-    try {
-      if (!openai) {
-        console.warn('OpenAI API key not configured. Skipping AI analysis.');
-        return {
-          entities: [],
-          confidence: 0
-        };
-      }
+  private async analyzeTextWithRules(text: string): Promise<Partial<ParsedDocumentData>> {
+    const entities: Array<{ type: string; value: string; confidence: number }> = [];
+    let documentType: 'invoice' | 'receipt' | 'tax_document' | 'compliance' | 'other' = 'other';
+    let confidence = 0.6; // Base confidence for rule-based analysis
 
-      const prompt = `
-Analyze the following document text and extract structured information. 
-Identify if this is an invoice, receipt, tax document, or other business document.
-Extract relevant entities and data points.
+    const lowerText = text.toLowerCase();
 
-Document Text:
-${text}
-
-Please respond with a JSON object containing:
-1. documentType: "invoice" | "receipt" | "tax_document" | "compliance" | "other"
-2. entities: Array of {type, value, confidence} for important entities
-3. invoiceData: If it's an invoice/receipt, extract invoice number, date, amount, vendor, GST numbers, items, etc.
-4. confidence: Overall confidence score (0-1)
-
-Response format:
-{
-  "documentType": "invoice",
-  "entities": [
-    {"type": "invoice_number", "value": "INV-001", "confidence": 0.95},
-    {"type": "amount", "value": "1000.00", "confidence": 0.90}
-  ],
-  "invoiceData": {
-    "invoiceNumber": "INV-001",
-    "amount": 1000.00,
-    "vendor": "Company Name"
-  },
-  "confidence": 0.85
-}
-`;
-
-      const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an expert document analyzer specializing in Indian business documents, invoices, and tax documents. Extract structured data accurately and provide confidence scores.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.1,
-        max_tokens: 1500
-      });
-
-      const aiResponse = response.choices[0]?.message?.content;
-      if (!aiResponse) {
-        throw new Error('No response from AI service');
-      }
-
-      // Try to parse JSON response
-      try {
-        const parsedResponse = JSON.parse(aiResponse);
-        return parsedResponse;
-      } catch (parseError) {
-        console.error('Failed to parse AI response as JSON:', aiResponse);
-        return {
-          entities: [],
-          confidence: 0
-        };
-      }
-
-    } catch (error) {
-      console.error('AI analysis error:', error);
-      return {
-        entities: [],
-        confidence: 0
-      };
+    // Determine document type
+    if (lowerText.includes('invoice') || lowerText.includes('bill') || lowerText.includes('inv no')) {
+      documentType = 'invoice';
+      confidence += 0.2;
+    } else if (lowerText.includes('receipt') || lowerText.includes('payment received')) {
+      documentType = 'receipt';
+      confidence += 0.2;
+    } else if (lowerText.includes('gst') || lowerText.includes('tax') || lowerText.includes('tds')) {
+      documentType = 'tax_document';
+      confidence += 0.1;
     }
+
+    // Extract common patterns
+
+    // Invoice numbers
+    const invoicePatterns = [
+      /(?:invoice|inv|bill)[\s#:no.-]*([A-Z0-9\/-]+)/gi,
+      /(?:^|\s)([A-Z]{2,4}[-\/]?\d{3,})/g
+    ];
+
+    for (const pattern of invoicePatterns) {
+      const matches = text.match(pattern);
+      if (matches) {
+        matches.forEach(match => {
+          entities.push({
+            type: 'invoice_number',
+            value: match.trim(),
+            confidence: 0.8
+          });
+        });
+      }
+    }
+
+    // Amounts (Indian currency)
+    const amountPatterns = [
+      /₹\s*([0-9,]+\.?\d*)/g,
+      /(?:rs|inr|amount|total)[\s:]*([0-9,]+\.?\d*)/gi,
+      /([0-9,]+\.?\d*)\s*(?:rs|inr|rupees)/gi
+    ];
+
+    for (const pattern of amountPatterns) {
+      const matches = text.match(pattern);
+      if (matches) {
+        matches.forEach(match => {
+          const amount = match.replace(/[^\d.,]/g, '');
+          if (amount && parseFloat(amount.replace(',', '')) > 0) {
+            entities.push({
+              type: 'amount',
+              value: amount,
+              confidence: 0.7
+            });
+          }
+        });
+      }
+    }
+
+    // GST numbers
+    const gstPattern = /\b\d{2}[A-Z]{5}\d{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}\b/g;
+    const gstMatches = text.match(gstPattern);
+    if (gstMatches) {
+      gstMatches.forEach(gst => {
+        entities.push({
+          type: 'gst_number',
+          value: gst,
+          confidence: 0.9
+        });
+      });
+    }
+
+    // PAN numbers
+    const panPattern = /\b[A-Z]{5}\d{4}[A-Z]{1}\b/g;
+    const panMatches = text.match(panPattern);
+    if (panMatches) {
+      panMatches.forEach(pan => {
+        entities.push({
+          type: 'pan_number',
+          value: pan,
+          confidence: 0.8
+        });
+      });
+    }
+
+    // Dates
+    const datePatterns = [
+      /\b\d{1,2}[-\/]\d{1,2}[-\/]\d{2,4}\b/g,
+      /\b\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{2,4}\b/gi
+    ];
+
+    for (const pattern of datePatterns) {
+      const matches = text.match(pattern);
+      if (matches) {
+        matches.forEach(date => {
+          entities.push({
+            type: 'date',
+            value: date,
+            confidence: 0.6
+          });
+        });
+      }
+    }
+
+    // Email addresses
+    const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+    const emailMatches = text.match(emailPattern);
+    if (emailMatches) {
+      emailMatches.forEach(email => {
+        entities.push({
+          type: 'email',
+          value: email,
+          confidence: 0.9
+        });
+      });
+    }
+
+    // Phone numbers (Indian format)
+    const phonePattern = /(?:\+91|91)?[-\s]?[6-9]\d{9}/g;
+    const phoneMatches = text.match(phonePattern);
+    if (phoneMatches) {
+      phoneMatches.forEach(phone => {
+        entities.push({
+          type: 'phone',
+          value: phone.trim(),
+          confidence: 0.7
+        });
+      });
+    }
+
+    // Basic invoice data extraction
+    let invoiceData: any = {};
+
+    if (documentType === 'invoice' || documentType === 'receipt') {
+      // Extract invoice number
+      const invoiceEntity = entities.find(e => e.type === 'invoice_number');
+      if (invoiceEntity) {
+        invoiceData.invoiceNumber = invoiceEntity.value;
+      }
+
+      // Extract amount
+      const amountEntity = entities.find(e => e.type === 'amount');
+      if (amountEntity) {
+        const amount = parseFloat(amountEntity.value.replace(/[,]/g, ''));
+        if (!isNaN(amount)) {
+          invoiceData.amount = amount;
+        }
+      }
+
+      // Extract GST number
+      const gstEntity = entities.find(e => e.type === 'gst_number');
+      if (gstEntity) {
+        invoiceData.gstNumber = gstEntity.value;
+      }
+
+      // Extract date
+      const dateEntity = entities.find(e => e.type === 'date');
+      if (dateEntity) {
+        try {
+          invoiceData.date = new Date(dateEntity.value);
+        } catch (e) {
+          // Invalid date format
+        }
+      }
+    }
+
+    return {
+      entities,
+      documentType,
+      confidence: Math.min(confidence, 1.0),
+      ...(Object.keys(invoiceData).length > 0 && { invoiceData })
+    };
   }
 
   /**
-   * Parse document and extract structured data
+   * Parse document and extract structured data using rule-based analysis only
    */
   async parseDocument(filePath: string, mimeType: string): Promise<ParsedDocumentData> {
     try {
@@ -229,16 +315,16 @@ Response format:
         };
       }
 
-      // Analyze text with AI
-      const aiAnalysis = await this.analyzeTextWithAI(extractedText);
+      // Analyze text with rule-based analysis only
+      const analysis = await this.analyzeTextWithRules(extractedText);
 
       // Combine results
       const result: ParsedDocumentData = {
         text: extractedText,
-        entities: aiAnalysis.entities || [],
-        documentType: aiAnalysis.documentType || 'other',
-        confidence: aiAnalysis.confidence || 0,
-        ...aiAnalysis.invoiceData && { invoiceData: aiAnalysis.invoiceData }
+        entities: analysis.entities || [],
+        documentType: analysis.documentType || 'other',
+        confidence: analysis.confidence || 0,
+        ...analysis.invoiceData && { invoiceData: analysis.invoiceData }
       };
 
       return result;

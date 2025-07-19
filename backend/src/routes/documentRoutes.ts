@@ -1,5 +1,6 @@
 import express from 'express';
 import { authenticate } from '../middleware/auth';
+import { checkUsageLimit, incrementUsage, checkFeatureAccess } from '../middleware/usageTracking';
 import {
   upload,
   uploadDocument,
@@ -21,9 +22,19 @@ const router = express.Router();
 // All routes require authentication
 router.use(authenticate);
 
-// Upload routes
-router.post('/upload', upload.single('document'), uploadDocument);
-router.post('/upload/multiple', upload.array('documents', 10), uploadMultipleDocuments);
+// Upload routes (with storage usage tracking)
+router.post('/upload',
+  checkUsageLimit('storage'),
+  upload.single('document'),
+  uploadDocument,
+  incrementUsage
+);
+router.post('/upload/multiple',
+  checkUsageLimit('storage'),
+  upload.array('documents', 10),
+  uploadMultipleDocuments,
+  incrementUsage
+);
 
 // Document management routes
 router.get('/', getUserDocuments);
@@ -34,9 +45,15 @@ router.get('/:id/download', downloadDocument);
 router.put('/:id', updateDocument);
 router.delete('/:id', deleteDocument);
 
-// Document processing routes
+// Document processing routes (with feature access control)
 router.post('/:id/parse', parseDocument);
-router.post('/:id/blockchain/verify', verifyDocumentOnBlockchain);
-router.post('/:id/blockchain/store', storeDocumentOnBlockchain);
+router.post('/:id/blockchain/verify',
+  checkFeatureAccess('apiAccess'),
+  verifyDocumentOnBlockchain
+);
+router.post('/:id/blockchain/store',
+  checkFeatureAccess('apiAccess'),
+  storeDocumentOnBlockchain
+);
 
 export default router;

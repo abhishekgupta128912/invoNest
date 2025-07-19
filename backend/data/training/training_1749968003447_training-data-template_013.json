@@ -1,0 +1,12 @@
+{
+  "input": "What’s the TDS rate for e-commerce sellers under GST?",
+  "output": "For FY 2025-26, TDS under GST (Section 51, CGST Act) is 2% (1% CGST + 1% SGST or 2% IGST) on payments to suppliers by notified entities (e.g., government, PSUs) for contracts > ₹2.5 lakh. For e-commerce sellers, TCS (Section 52) is 0.5% (0.25% CGST + 0.25% SGST or 0.5% IGST) deducted by operators like Amazon on each transaction, effective from July 10, 2024. File GSTR-7 for TDS or claim TCS in GSTR-3B.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.447558Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

@@ -1,0 +1,12 @@
+{
+  "input": "What’s the GST compliance for composition scheme taxpayers?",
+  "output": "For FY 2025-26, composition scheme taxpayers (turnover ≤ ₹1.5 crore):\n- Pay GST at 1.5% (traders), 5% (restaurants), or 6% (service providers) on turnover.\n- File GSTR-4 annually (by April 30, 2026).\n- File CMP-08 quarterly (by 18th of next quarter).\n- No ITC eligibility.\n- Issue bill of supply, not tax invoice.\nInvoNest supports composition scheme billing.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.458845Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

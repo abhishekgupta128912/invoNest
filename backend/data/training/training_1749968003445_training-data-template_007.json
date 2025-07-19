@@ -1,0 +1,12 @@
+{
+  "input": "How much tax will I pay if my salary is ₹15 lakh in FY 2025-26?",
+  "output": "For a ₹15 lakh salary in FY 2025-26 (new regime):\n- Standard deduction: ₹75,000\n- Taxable income: ₹15,00,000 – ₹75,000 = ₹14,25,000\nTax calculation:\n- ₹0–₹4 lakh: ₹0\n- ₹4–₹8 lakh: ₹4,00,000 × 5% = ₹20,000\n- ₹8–₹12 lakh: ₹4,00,000 × 10% = ₹40,000\n- ₹12–₹14.25 lakh: ₹2,25,000 × 15% = ₹33,750\nTotal tax: ₹20,000 + ₹40,000 + ₹33,750 = ₹93,750\nAdd 4% cess: ₹93,750 × 4% = ₹3,750\nFinal tax: ₹93,750 + ₹3,750 = ₹97,500\nFile ITR-1 by September 15, 2025. Want to explore old regime deductions?",
+  "category": "tds",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.445537Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

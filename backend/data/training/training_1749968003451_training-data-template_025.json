@@ -1,0 +1,12 @@
+{
+  "input": "How to claim ITC for inter-state purchases?",
+  "output": "To claim ITC for inter-state purchases in FY 2025-26:\n1. Ensure supplier issues a GST invoice with IGST and your GSTIN.\n2. Verify invoice in GSTR-2B on gst.gov.in.\n3. Record in books and claim ITC in GSTR-3B (Table 4A).\n4. Pay IGST liability via cash/credit ledger.\n5. Reconcile with GSTR-2A/GSTR-2B to avoid notices.\nExample: ₹1,00,000 purchase, IGST (18%) = ₹18,000. Claim ₹18,000 ITC if conditions met. InvoNest automates reconciliation.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.451728Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}

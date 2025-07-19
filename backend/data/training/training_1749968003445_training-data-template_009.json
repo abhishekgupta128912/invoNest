@@ -1,0 +1,12 @@
+{
+  "input": "What are the mandatory elements of a GST-compliant invoice?",
+  "output": "A GST-compliant invoice for FY 2025-26 must include:\n1. Invoice number and date\n2. Supplier’s name, address, and GSTIN\n3. Recipient’s name, address, and GSTIN (for B2B)\n4. HSN/SAC code\n5. Item description, quantity, unit price\n6. Taxable value and GST rate (CGST, SGST, or IGST)\n7. Total amount with tax breakdown\n8. Place of supply\n9. Signature (if applicable)\nFor e-invoices (turnover > ₹5 crore), generate IRN via the GST portal. InvoNest automates this process.",
+  "category": "gst",
+  "confidence": 0.9,
+  "source": "extracted_instruction",
+  "original_format": "instruction_response",
+  "timestamp": "2025-06-15T11:43:23.445537Z",
+  "source_file": "training-data-template.json",
+  "extraction_date": "2025-06-15",
+  "extractor_version": "1.0"
+}
