@@ -59,8 +59,7 @@ const PaymentTokenSchema = new Schema<IPaymentToken>({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    index: true
+    required: true
   },
   amount: {
     type: Number,
@@ -80,8 +79,7 @@ const PaymentTokenSchema = new Schema<IPaymentToken>({
   usedAt: Date,
   expiresAt: {
     type: Date,
-    required: true,
-    index: true
+    required: true
   },
   scanCount: {
     type: Number,

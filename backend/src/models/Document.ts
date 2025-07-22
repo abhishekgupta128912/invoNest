@@ -57,8 +57,7 @@ const DocumentSchema = new Schema<IDocument>({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    index: true
+    required: true
   },
   fileName: {
     type: String,
