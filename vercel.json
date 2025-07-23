@@ -10,12 +10,6 @@
       }
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
-    }
-  ],
   "env": {
     "NEXT_PUBLIC_API_URL": "https://invonest-backend.onrender.com",
     "NEXT_PUBLIC_RECAPTCHA_SITE_KEY": "6LfjK4grAAAAANb-4AFSjCRQX-1gSAHWPFsTKQ9g",
