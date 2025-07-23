@@ -9,6 +9,7 @@ export interface User {
   role: 'user' | 'admin';
   businessName?: string;
   logo?: string;
+  signature?: string;
   gstNumber?: string;
   phone?: string;
   address?: {
