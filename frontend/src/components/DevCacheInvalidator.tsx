@@ -19,7 +19,7 @@ export default function DevCacheInvalidator() {
       if (typeof window !== 'undefined') {
         // Add timestamp to force re-renders
         const timestamp = Date.now();
-        window.__NEXT_CACHE_BUST__ = timestamp;
+        (window as any).__NEXT_CACHE_BUST__ = timestamp;
         
         // Force a hard refresh if the page has been cached for too long
         const lastRefresh = localStorage.getItem('lastHardRefresh');
