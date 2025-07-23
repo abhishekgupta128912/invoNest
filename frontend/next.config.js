@@ -13,9 +13,11 @@ const nextConfig = {
     domains: ['localhost'],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60, // 1 minute
+    unoptimized: true, // Required for static export
   },
-  // Remove output standalone for Vercel deployment
-  // output: 'standalone',
+  // Enable static export for Render deployment
+  output: 'export',
+  trailingSlash: true,
   // Disable powered by header
   poweredByHeader: false,
   // Generate ETags for better caching

@@ -3,6 +3,9 @@ import UserSubscription, { IUserSubscription } from '../models/UserSubscription'
 import User from '../models/User';
 import mongoose from 'mongoose';
 
+/**
+ * Subscription Service for managing user subscriptions and plans
+ */
 export class SubscriptionService {
   
   /**
@@ -49,19 +52,16 @@ export class SubscriptionService {
     }
 
     const now = new Date();
-    let periodEnd: Date;
+    let status: 'active' | 'trialing' = 'active';
     let trialStart: Date | undefined;
     let trialEnd: Date | undefined;
-    let status: string = 'active';
-    let amount = plan.price[billingCycle];
+    let periodEnd: Date;
 
-    // Handle trial period
     if (startTrial && planId !== 'free') {
       status = 'trialing';
       trialStart = now;
       trialEnd = new Date(now.getTime() + (14 * 24 * 60 * 60 * 1000)); // 14 days trial
       periodEnd = trialEnd;
-      amount = 0; // No charge during trial
     } else {
       // Calculate period end based on billing cycle
       if (billingCycle === 'yearly') {
@@ -70,6 +70,8 @@ export class SubscriptionService {
         periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
       }
     }
+
+    const amount = startTrial ? 0 : plan.price[billingCycle];
 
     const subscription = new UserSubscription({
       userId,
@@ -119,27 +121,29 @@ export class SubscriptionService {
     subscription.billingCycle = billingCycle;
     subscription.amount = newPlan.price[billingCycle];
 
-    // Handle trial mode
+    const now = new Date();
+    
     if (startTrial && newPlanId !== 'free') {
-      const now = new Date();
       subscription.status = 'trialing';
       subscription.trialStart = now;
       subscription.trialEnd = new Date(now.getTime() + (14 * 24 * 60 * 60 * 1000)); // 14 days trial
       subscription.currentPeriodEnd = subscription.trialEnd;
       subscription.amount = 0; // No charge during trial
-    } else if (newPlanId === 'free') {
-      // If changing to free plan, cancel immediately
-      subscription.status = 'active';
-      subscription.amount = 0;
-      subscription.cancelAtPeriodEnd = false;
-      subscription.trialStart = undefined;
-      subscription.trialEnd = undefined;
     } else {
-      // Regular plan change
       subscription.status = 'active';
       subscription.trialStart = undefined;
       subscription.trialEnd = undefined;
+      
+      // Calculate new period end
+      if (billingCycle === 'yearly') {
+        subscription.currentPeriodEnd = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+      } else {
+        subscription.currentPeriodEnd = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+      }
     }
+
+    subscription.nextBillingDate = subscription.currentPeriodEnd;
+    subscription.cancelAtPeriodEnd = false; // Reset cancellation flag
 
     return await subscription.save();
   }
@@ -193,15 +197,13 @@ export class SubscriptionService {
 
     switch (action) {
       case 'invoice':
-        if (plan.features.maxInvoices === -1) return true; // Unlimited
-        return subscription.usage.invoicesUsed + amount <= plan.features.maxInvoices;
-      
+        return plan.features.maxInvoices === -1 || 
+               (subscription.usage.invoicesUsed + amount) <= plan.features.maxInvoices;
       case 'storage':
-        return subscription.usage.storageUsed + amount <= plan.features.maxStorage;
-      
+        return (subscription.usage.storageUsed + amount) <= plan.features.maxStorage;
       case 'user':
-        return subscription.usage.usersCount + amount <= plan.features.maxUsers;
-      
+        return plan.features.maxUsers === -1 || 
+               (subscription.usage.usersCount + amount) <= plan.features.maxUsers;
       default:
         return false;
     }
@@ -295,21 +297,20 @@ export class SubscriptionService {
         description: 'For growing businesses',
         price: { monthly: 99, yearly: 990 },
         features: {
-          maxInvoices: -1,
-          maxStorage: 5120,
+          maxInvoices: 100,
+          maxStorage: 2048,
           maxUsers: 5,
           documentAnalysis: true,
-          prioritySupport: true,
+          prioritySupport: false,
           apiAccess: true,
-          customBranding: true,
+          customBranding: false,
           advancedReports: true,
           automatedReminders: true,
           recurringInvoices: true,
           multiCurrency: true,
-          exportOptions: ['pdf', 'excel', 'csv']
+          exportOptions: ['pdf', 'excel']
         },
-        sortOrder: 2,
-        isPopular: true
+        sortOrder: 2
       },
       {
         id: 'business',
@@ -337,3 +338,6 @@ export class SubscriptionService {
     await Plan.insertMany(defaultPlans);
   }
 }
+
+// Export both named and default
+export default SubscriptionService;
