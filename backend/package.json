@@ -8,7 +8,6 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc && npm run copy-assets",
     "copy-assets": "cp -r public dist/ || xcopy public dist\\public /E /I /Y || echo 'Assets copied'",
-    "postbuild": "node scripts/initializeDatabase.js",
     "prebuild": "rimraf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed:compliance": "ts-node src/scripts/seedComplianceData.ts",
