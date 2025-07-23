@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,7 +9,7 @@ import { RecaptchaBadge } from '../../../components/auth/RecaptchaProvider';
 import { RECAPTCHA_ACTIONS } from '../../../hooks/useRecaptcha';
 import OTPInput from '../../../components/auth/OTPInput';
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const [step, setStep] = useState<'otp' | 'password'>('otp');
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
@@ -361,5 +361,13 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

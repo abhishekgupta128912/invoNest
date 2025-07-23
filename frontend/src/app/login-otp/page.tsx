@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,7 +10,7 @@ import { RecaptchaBadge } from '../../components/auth/RecaptchaProvider';
 import { RECAPTCHA_ACTIONS } from '../../hooks/useRecaptcha';
 import OTPInput from '../../components/auth/OTPInput';
 
-export default function OTPLoginPage() {
+function OTPLoginContent() {
   const [email, setEmail] = useState('');
   const [step, setStep] = useState<'email' | 'otp'>('email');
   const [loading, setLoading] = useState(false);
@@ -331,5 +331,13 @@ export default function OTPLoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OTPLoginPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <OTPLoginContent />
+    </Suspense>
   );
 }

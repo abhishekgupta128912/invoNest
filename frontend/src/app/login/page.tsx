@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -9,7 +9,7 @@ import { useRecaptchaContext } from '../../components/auth/RecaptchaProvider';
 import { RecaptchaBadge } from '../../components/auth/RecaptchaProvider';
 import { RECAPTCHA_ACTIONS } from '../../hooks/useRecaptcha';
 
-export default function LoginPage() {
+function LoginContent() {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -298,5 +298,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
