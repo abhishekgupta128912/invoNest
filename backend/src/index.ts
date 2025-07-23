@@ -49,6 +49,7 @@ import RecurringInvoiceService from './services/recurringInvoiceService';
 import { EnhancedAnalyticsService } from './services/enhancedAnalyticsService';
 import EmailQueueService from './services/emailQueueService';
 import SecurePaymentService from './services/securePaymentService';
+import { SubscriptionService } from './services/SubscriptionService';
 
 // Debug: Log environment loading
 console.log('=== ENVIRONMENT LOADING DEBUG ===');
@@ -268,7 +269,7 @@ app.use('*', (req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 InvoNest server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
 
@@ -290,6 +291,10 @@ app.listen(PORT, () => {
   // Initialize email queue service
   EmailQueueService.getInstance();
   console.log('📮 Email queue service initialized');
+
+  // Initialize subscription plans
+  await SubscriptionService.initializeDefaultPlans();
+  console.log('💳 Subscription plans initialized');
 
   // Schedule cleanup of expired payment tokens (every hour)
   setInterval(async () => {

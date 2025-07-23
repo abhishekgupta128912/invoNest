@@ -4,7 +4,7 @@ import Invoice, { IInvoice } from '../models/Invoice';
 import User from '../models/User';
 import { calculateInvoiceGST, calculateInvoiceSimple, convertToInvoiceItems } from '../utils/gstCalculations';
 import { generateInvoicePDF } from '../utils/pdfGenerator';
-import SubscriptionService from '../services/subscriptionService';
+import { SubscriptionService } from '../services/SubscriptionService';
 import { getEmailService } from '../services/emailService';
 import EmailQueueService from '../services/emailQueueService';
 import { timeOperation } from '../utils/performanceMonitor';
@@ -113,7 +113,7 @@ export const createInvoice = async (req: Request, res: Response): Promise<void> 
 
     // Increment usage after successful invoice creation
     try {
-      await SubscriptionService.incrementUsage(userId.toString(), 'invoices', 1);
+      await SubscriptionService.trackUsage(userId.toString(), 'invoice', 1);
       console.log('Usage incremented successfully for invoice creation');
     } catch (error) {
       console.error('Failed to increment usage:', error);

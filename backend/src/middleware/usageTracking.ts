@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import SubscriptionService from '../services/subscriptionService';
+import { SubscriptionService } from '../services/SubscriptionService';
 
-// Middleware to check and track usage limits
-export const checkUsageLimit = (action: 'invoice' | 'storage') => {
+/**
+ * Middleware to check usage limits before allowing actions
+ */
+export const checkUsageLimit = (action: 'invoice' | 'storage' | 'user', amount: number = 1) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user?._id;
@@ -13,19 +15,6 @@ export const checkUsageLimit = (action: 'invoice' | 'storage') => {
         });
       }
 
-      // Get amount from request body or default to 1
-      let amount = 1;
-      if (action === 'storage') {
-        if (req.file) {
-          amount = Math.ceil(req.file.size / (1024 * 1024)); // Convert bytes to MB
-        } else if (req.files && Array.isArray(req.files)) {
-          // Handle multiple files
-          amount = req.files.reduce((total, file) => {
-            return total + Math.ceil(file.size / (1024 * 1024));
-          }, 0);
-        }
-      }
-
       // Check if user can perform the action
       const canPerform = await SubscriptionService.checkUsageLimit(
         userId.toString(),
@@ -34,18 +23,22 @@ export const checkUsageLimit = (action: 'invoice' | 'storage') => {
       );
 
       if (!canPerform) {
-        const subscription = await SubscriptionService.getSubscriptionWithUsage(userId.toString());
+        const subscriptionDetails = await SubscriptionService.getSubscriptionWithDetails(userId.toString());
         
         let message = '';
         let upgradeRequired = false;
         
         switch (action) {
           case 'invoice':
-            message = `Invoice limit reached. You have used ${subscription?.usage.invoicesUsed}/${subscription?.features.maxInvoices} invoices this month.`;
-            upgradeRequired = subscription?.planId === 'free';
+            message = `Invoice limit reached. You have used ${subscriptionDetails?.subscription.usage.invoicesUsed}/${subscriptionDetails?.plan?.features.maxInvoices === -1 ? 'unlimited' : subscriptionDetails?.plan?.features.maxInvoices} invoices this month.`;
+            upgradeRequired = subscriptionDetails?.subscription.planId === 'free';
             break;
           case 'storage':
-            message = `Storage limit reached. You have used ${subscription?.usage.storageUsed}MB/${subscription?.features.maxStorage}MB.`;
+            message = `Storage limit reached. You have used ${subscriptionDetails?.subscription.usage.storageUsed}MB/${subscriptionDetails?.plan?.features.maxStorage}MB.`;
+            upgradeRequired = true;
+            break;
+          case 'user':
+            message = `User limit reached. You have ${subscriptionDetails?.subscription.usage.usersCount}/${subscriptionDetails?.plan?.features.maxUsers === -1 ? 'unlimited' : subscriptionDetails?.plan?.features.maxUsers} users.`;
             upgradeRequired = true;
             break;
         }
@@ -56,21 +49,16 @@ export const checkUsageLimit = (action: 'invoice' | 'storage') => {
           code: 'USAGE_LIMIT_EXCEEDED',
           data: {
             action,
-            currentUsage: subscription?.usage,
-            limits: subscription?.features,
+            currentUsage: subscriptionDetails?.subscription.usage,
+            limits: subscriptionDetails?.plan?.features,
             upgradeRequired,
-            currentPlan: subscription?.planId
+            currentPlan: subscriptionDetails?.subscription.planId
           }
         });
       }
 
-      // Store action type for post-processing (map to service types)
-      const serviceTypeMap = {
-        'invoice': 'invoices' as const,
-        'storage': 'storage' as const
-      };
-
-      req.usageAction = { type: serviceTypeMap[action], amount };
+      // Store action type for post-processing
+      req.usageAction = { type: action, amount };
       next();
     } catch (error) {
       console.error('Usage limit check error:', error);
@@ -82,14 +70,16 @@ export const checkUsageLimit = (action: 'invoice' | 'storage') => {
   };
 };
 
-// Middleware to increment usage after successful action
-export const incrementUsage = async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * Middleware to track usage after successful action
+ */
+export const trackUsageAfterAction = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?._id;
     const usageAction = req.usageAction;
 
     if (userId && usageAction) {
-      await SubscriptionService.incrementUsage(
+      await SubscriptionService.trackUsage(
         userId.toString(),
         usageAction.type,
         usageAction.amount
@@ -98,13 +88,15 @@ export const incrementUsage = async (req: Request, res: Response, next: NextFunc
 
     next();
   } catch (error) {
-    console.error('Usage increment error:', error);
+    console.error('Usage tracking error:', error);
     // Don't fail the request if usage tracking fails
     next();
   }
 };
 
-// Middleware to check feature access
+/**
+ * Middleware to check feature access
+ */
 export const checkFeatureAccess = (feature: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -116,9 +108,9 @@ export const checkFeatureAccess = (feature: string) => {
         });
       }
 
-      const subscription = await SubscriptionService.getSubscriptionWithUsage(userId.toString());
+      const subscriptionDetails = await SubscriptionService.getSubscriptionWithDetails(userId.toString());
 
-      if (!subscription) {
+      if (!subscriptionDetails) {
         return res.status(403).json({
           success: false,
           message: 'No subscription found',
@@ -126,7 +118,7 @@ export const checkFeatureAccess = (feature: string) => {
         });
       }
 
-      if (!SubscriptionService.isSubscriptionActive(subscription)) {
+      if (!subscriptionDetails.subscription.isActive()) {
         return res.status(403).json({
           success: false,
           message: 'No active subscription found',
@@ -135,7 +127,7 @@ export const checkFeatureAccess = (feature: string) => {
       }
 
       // Check if user has access to the feature
-      const hasAccess = subscription.features && subscription.features[feature];
+      const hasAccess = subscriptionDetails.plan?.features && subscriptionDetails.plan.features[feature as keyof typeof subscriptionDetails.plan.features];
       
       if (!hasAccess) {
         return res.status(403).json({
@@ -144,7 +136,7 @@ export const checkFeatureAccess = (feature: string) => {
           code: 'FEATURE_NOT_AVAILABLE',
           data: {
             feature,
-            currentPlan: subscription.planId,
+            currentPlan: subscriptionDetails.subscription.planId,
             upgradeRequired: true
           }
         });
@@ -161,13 +153,15 @@ export const checkFeatureAccess = (feature: string) => {
   };
 };
 
-// Middleware to add subscription info to response
+/**
+ * Middleware to add subscription info to response
+ */
 export const addSubscriptionInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?._id;
     if (userId) {
-      const subscription = await SubscriptionService.getSubscriptionWithUsage(userId.toString());
-      req.userSubscription = subscription;
+      const subscriptionDetails = await SubscriptionService.getSubscriptionWithDetails(userId.toString());
+      req.userSubscription = subscriptionDetails;
     }
     next();
   } catch (error) {
@@ -181,7 +175,7 @@ declare global {
   namespace Express {
     interface Request {
       usageAction?: {
-        type: 'invoices' | 'storage';
+        type: 'invoice' | 'storage' | 'user';
         amount: number;
       };
       userSubscription?: any;

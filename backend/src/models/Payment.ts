@@ -2,7 +2,6 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IPayment extends Document {
   userId: mongoose.Types.ObjectId;
-  subscriptionId: mongoose.Types.ObjectId;
   razorpayPaymentId?: string;
   razorpayOrderId?: string;
   razorpaySignature?: string;
@@ -26,11 +25,6 @@ const PaymentSchema = new Schema<IPayment>({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true
-  },
-  subscriptionId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Subscription',
     required: true
   },
   razorpayPaymentId: {
@@ -90,7 +84,6 @@ const PaymentSchema = new Schema<IPayment>({
 
 // Indexes
 PaymentSchema.index({ userId: 1 });
-PaymentSchema.index({ subscriptionId: 1 });
 PaymentSchema.index({ status: 1 });
 // Note: razorpayPaymentId already has sparse index from schema definition
 PaymentSchema.index({ createdAt: -1 });

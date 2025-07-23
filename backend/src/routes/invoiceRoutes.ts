@@ -20,7 +20,7 @@ import {
 } from '../controllers/invoiceCalculationController';
 import { authenticate } from '../middleware/auth';
 import { validateInvoiceCreation, validateInvoiceUpdate } from '../middleware/invoiceValidation';
-import { checkUsageLimit, incrementUsage, checkFeatureAccess } from '../middleware/usageTracking';
+import { checkUsageLimit, trackUsageAfterAction, checkFeatureAccess } from '../middleware/usageTracking';
 
 const router = express.Router();
 

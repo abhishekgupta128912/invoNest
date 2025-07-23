@@ -1,6 +1,6 @@
 import express from 'express';
 import { authenticate } from '../middleware/auth';
-import { checkUsageLimit, incrementUsage, checkFeatureAccess } from '../middleware/usageTracking';
+import { checkUsageLimit, trackUsageAfterAction, checkFeatureAccess } from '../middleware/usageTracking';
 import {
   upload,
   uploadDocument,
@@ -27,13 +27,13 @@ router.post('/upload',
   checkUsageLimit('storage'),
   upload.single('document'),
   uploadDocument,
-  incrementUsage
+  trackUsageAfterAction
 );
 router.post('/upload/multiple',
   checkUsageLimit('storage'),
   upload.array('documents', 10),
   uploadMultipleDocuments,
-  incrementUsage
+  trackUsageAfterAction
 );
 
 // Document management routes
