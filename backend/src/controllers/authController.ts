@@ -76,7 +76,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     // Create free subscription for new user
     try {
-      const SubscriptionService = require('../services/subscriptionService').default;
+      const { SubscriptionService } = await import('../services/SubscriptionService');
       await SubscriptionService.createSubscription(
         (user._id as any).toString(),
         'free',

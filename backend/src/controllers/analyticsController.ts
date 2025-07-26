@@ -118,18 +118,19 @@ export const getCashFlowAnalytics = async (req: Request, res: Response) => {
     }
 
     // Check if user has advanced reports access
-    const SubscriptionService = require('../services/subscriptionService').default;
-    let subscription = await SubscriptionService.getSubscriptionWithUsage(userId!.toString());
+    const { SubscriptionService } = await import('../services/SubscriptionService');
+    let subscription = await SubscriptionService.getSubscriptionWithDetails(userId!.toString());
 
     // Create free subscription if none exists (for existing users)
     if (!subscription) {
       try {
-        subscription = await SubscriptionService.createSubscription(
+        const newSubscription = await SubscriptionService.createSubscription(
           userId!.toString(),
           'free',
           'monthly',
           false
         );
+        subscription = await SubscriptionService.getSubscriptionWithDetails(userId!.toString());
         console.log(`Created free subscription for existing user ${userId}`);
       } catch (error) {
         console.error('Error creating subscription for existing user:', error);
@@ -137,7 +138,7 @@ export const getCashFlowAnalytics = async (req: Request, res: Response) => {
       }
     }
 
-    const hasAdvancedReports = subscription?.features?.advancedReports || false;
+    const hasAdvancedReports = subscription?.plan?.features?.advancedReports || false;
 
     if (hasAdvancedReports) {
       // Full analytics for paid users

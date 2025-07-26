@@ -15,8 +15,8 @@ const nextConfig = {
     minimumCacheTTL: 60, // 1 minute
     unoptimized: true, // Required for static export
   },
-  // Enable static export for Render deployment
-  output: 'export',
+  // Remove static export for Vercel deployment (use default SSR/SSG)
+  // output: 'export',
   trailingSlash: true,
   // Disable powered by header
   poweredByHeader: false,
