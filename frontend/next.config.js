@@ -29,6 +29,8 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['react-hot-toast'],
   },
+  // Ensure CSS is processed correctly
+  transpilePackages: [],
   // Webpack configuration
   webpack: (config, { isServer }) => {
     // Add any custom webpack configurations here
