@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import InvoiceForm from '@/components/invoice/InvoiceForm';
-import { authenticatedFetch } from '@/lib/auth';
+import DashboardLayout from '../../../../../components/dashboard/DashboardLayout';
+import InvoiceForm from '../../../../../components/invoice/InvoiceForm';
+import { authenticatedFetch } from '../../../../../lib/auth';
 
 interface Invoice {
   _id: string;
