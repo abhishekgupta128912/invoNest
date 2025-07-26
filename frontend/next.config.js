@@ -13,11 +13,10 @@ const nextConfig = {
     domains: ['localhost'],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60, // 1 minute
-    unoptimized: true, // Required for static export
+    unoptimized: false, // Enable optimization for Vercel
   },
   // Remove static export for Vercel deployment (use default SSR/SSG)
   // output: 'export',
-  trailingSlash: true,
   // Disable powered by header
   poweredByHeader: false,
   // Generate ETags for better caching
