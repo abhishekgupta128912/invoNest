@@ -27,7 +27,6 @@ const nextConfig = {
   },
   // Enable React Refresh in development
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['react-hot-toast'],
   },
   // Webpack configuration
