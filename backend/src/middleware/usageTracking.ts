@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import SubscriptionService from '../services/SubscriptionService';
+import SubscriptionService from '../services/subscriptionService';
 
 /**
  * Middleware to check usage limits before allowing actions
