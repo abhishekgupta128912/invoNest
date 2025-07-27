@@ -1,5 +1,5 @@
-# Use Node.js 18 LTS
-FROM node:18-alpine
+# Use Node.js 20 LTS (to resolve engine warnings)
+FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app
@@ -13,8 +13,11 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# Fix permissions for node_modules binaries
+RUN chmod +x node_modules/.bin/*
+
+# Build the application using npx for better reliability
+RUN npx tsc && npm run copy-assets
 
 # Remove dev dependencies to reduce image size
 RUN npm prune --production
