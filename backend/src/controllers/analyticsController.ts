@@ -118,7 +118,7 @@ export const getCashFlowAnalytics = async (req: Request, res: Response) => {
     }
 
     // Check if user has advanced reports access
-    const { SubscriptionService } = await import('../services/SubscriptionService');
+    const SubscriptionService = (await import('../services/SubscriptionService')).default;
     let subscription = await SubscriptionService.getSubscriptionWithDetails(userId!.toString());
 
     // Create free subscription if none exists (for existing users)

@@ -49,7 +49,7 @@ import RecurringInvoiceService from './services/recurringInvoiceService';
 import { EnhancedAnalyticsService } from './services/enhancedAnalyticsService';
 import EmailQueueService from './services/emailQueueService';
 import SecurePaymentService from './services/securePaymentService';
-import { SubscriptionService } from './services/SubscriptionService';
+import SubscriptionService from './services/SubscriptionService';
 
 // Debug: Log environment loading
 console.log('=== ENVIRONMENT LOADING DEBUG ===');

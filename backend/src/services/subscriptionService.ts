@@ -339,5 +339,5 @@ export class SubscriptionService {
   }
 }
 
-// Export both named and default
+// Export as default
 export default SubscriptionService;

@@ -4,7 +4,7 @@ import Invoice, { IInvoice } from '../models/Invoice';
 import User from '../models/User';
 import { calculateInvoiceGST, calculateInvoiceSimple, convertToInvoiceItems } from '../utils/gstCalculations';
 import { generateInvoicePDF } from '../utils/pdfGenerator';
-import { SubscriptionService } from '../services/SubscriptionService';
+import SubscriptionService from '../services/SubscriptionService';
 import { getEmailService } from '../services/emailService';
 import EmailQueueService from '../services/emailQueueService';
 import { timeOperation } from '../utils/performanceMonitor';
